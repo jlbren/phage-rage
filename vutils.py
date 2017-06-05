@@ -4,9 +4,9 @@ import sys
 import os
 import shutil
 
-class VUtil:
+class VSetup:
     def __init__(self, argv_):
-        self.argv_ = argv_[1:]
+        self.argv_ = argv_
         self._parser = self._varg_parse()
         self.args = self._parser.parse_args(self.argv_)
         self._check_parser()
@@ -92,7 +92,7 @@ class VUtil:
     def _create_output_dirs(self):
         if self.args.output != os.getcwd():
             self.args.output = os.path.join(os.getcwd(), self.args.output)
-        out_path = self.arg.output
+        out_path = self.args.output
         if not os.path.exists(out_path):
             try:
                 os.makedirs(out_path)
@@ -142,8 +142,8 @@ class VUtil:
                                         + os.environ['PATH']
                                        )
 
-
-v = VUtil(sys.argv)
-print(v.args)
-print(v.out_dirs)
-v.check_dependencies()
+if __name__ == '__main__':
+    v = VSetup(sys.argv[1:])
+    print(v.args)
+    print(v.out_dirs)
+    v.check_dependencies()

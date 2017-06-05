@@ -1,5 +1,6 @@
 import subprocess as sub
 import sys
+import os
 class VAssemble:
     def __init__(self, args, out_dirs):
         self.input_file = args.input_file
@@ -20,16 +21,16 @@ class VAssemble:
 
     def _run_sickle(self):
         s_type = 'sanger'
-        s_length = 100
+        s_length = '100' 
         if self.r_type == 'SE':
             fname = os.path.basename(self.input_file[0])
-            p = sub.run([
+            p = sub.run(['sh',
                          'sickle',
                           self.r_rtype,
                           '-f', self.input_file[0],
                           '-t', s_type,
                           '-l', s_length,
-                          '-o', os.join(qc_dir, 'trimmed-'+fname)
+                          '-o', os.path.join(self.qc_dir, 'trimmed-'+fname)
 
                         ],
                         stdout=sub.PIPE, stderr=sub.PIPE, check=True
@@ -44,9 +45,9 @@ class VAssemble:
                          '-r', self.input_file[1],
                          '-t', s_type,
                          '-l', s_length,
-                         '-o', os.join(qc_dir, 'trimemed-'+fname),
-                         '-p', os.join(qc_dir, 'trimmed-'+rname),
-                         '-s'. os.join(qc_dir, 'singletons.fastq')
+                         '-o', os.path.join(self.qc_dir, 'trimemed-'+fname),
+                         '-p', os.path.join(self.qc_dir, 'trimmed-'+rname),
+                         '-s', os.path.join(self.qc_dir, 'singletons.fastq')
                         ],
                         stdout=sub.PIPE, stderr=sub.PIPE, check=True
                        )
