@@ -44,7 +44,7 @@ class VUtil:
         group_r.add_argument('-p', '--paired_end_reads',
                              action='store_true',
                              help='Paired-end reads flag.\n'
-                             'Requires specifying 2 input read files.')
+                                  'Requires specifying 2 input read files.')
 
         # Number of threads.
         parser.add_argument('-t', '--threads', type=int, default=1,
@@ -53,7 +53,8 @@ class VUtil:
         #Output base directory.
         parser.add_argument('-o', '--output', default=os.getcwd(),
                             help='Base output directory path.\n'
-                            'All output will be located here.')
+                            'All output will be located here.\n'
+                            'Must be relative to current working directory,')
         # Read quality control flag
         parser.add_argument('-q', '--quality_control', action='store_true',
                             help='Read quality control flag.')
@@ -89,10 +90,9 @@ class VUtil:
                   file=sys.stderr)
 
     def _create_output_dirs(self):
-        if self.args.output == os.getcwd():
-            out_path = self.args.output
-        else:
-            out_path = os.path.join(os.getcwd(), self.args.output)
+        if self.args.output != os.getcwd():
+            self.args.output = os.path.join(os.getcwd(), self.args.output)
+        out_path = self.arg.output
         if not os.path.exists(out_path):
             try:
                 os.makedirs(out_path)
@@ -114,8 +114,7 @@ class VUtil:
         else:
             out_dirs['assembled'] = self._make_dir(out_path, 'assembled')
             if self.args.quality_control is True:
-                out_dirs['quality_control'] = self._make_dir(out_path,
-                                                             'quality_control')
+                out_dirs['trimmed'] = self._make_dir(out_path, 'trimmed')
 
         return out_dirs
 
@@ -127,19 +126,19 @@ class VUtil:
         else:
             raise FileExistsError('Directory: ' + fpath + ' already exists.\n'
                                   'Please specify an unused output directory.')
-    
-    def check_dependencies(self): 
+
+    def check_dependencies(self):
         depend_list = []
         if self.args.assembled_contigs is False:
             depend_list.append(self.args.assembler)
-        if self.args.quality_control is True: 
+        if self.args.quality_control is True:
             depend_list.append('sickle')
 
-        for prog in depend_list: 
-            if shutil.which(prog) is None: 
+        for prog in depend_list:
+            if shutil.which(prog, mode=os.X_OK) is None:
                 raise FileNotFoundError('Could not find dependency: '
                                         + prog + '\n'
-                                        'Looking in: ' 
+                                        'Looking in: '
                                         + os.environ['PATH']
                                        )
 
