@@ -2,6 +2,7 @@
 import argparse
 import sys
 import os
+import shutil
 
 class VUtil:
     def __init__(self, argv_):
@@ -88,12 +89,15 @@ class VUtil:
                   file=sys.stderr)
 
     def _create_output_dirs(self):
-        out_path = self.args.output
+        if self.args.output == os.getcwd():
+            out_path = self.args.output
+        else:
+            out_path = os.path.join(os.getcwd(), self.args.output)
         if not os.path.exists(out_path):
-            try: 
+            try:
                 os.makedirs(out_path)
                 print("Creating new output directory:", out_path)
-            except: 
+            except:
                     raise FileNotFoundError('Output directory '
                                             + out_path + 'could not be created. '
                                             'Check argument path and try again.')
@@ -123,8 +127,24 @@ class VUtil:
         else:
             raise FileExistsError('Directory: ' + fpath + ' already exists.\n'
                                   'Please specify an unused output directory.')
+    
+    def check_dependencies(self): 
+        depend_list = []
+        if self.args.assembled_contigs is False:
+            depend_list.append(self.args.assembler)
+        if self.args.quality_control is True: 
+            depend_list.append('sickle')
+
+        for prog in depend_list: 
+            if shutil.which(prog) is None: 
+                raise FileNotFoundError('Could not find dependency: '
+                                        + prog + '\n'
+                                        'Looking in: ' 
+                                        + os.environ['PATH']
+                                       )
 
 
 v = VUtil(sys.argv)
 print(v.args)
 print(v.out_dirs)
+v.check_dependencies()
