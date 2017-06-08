@@ -2,17 +2,13 @@ import subprocess as sub
 import sys
 import os
 class VAssemble:
-    def __init__(self, args, out_dirs):
-        self.input_file = args.input_file
-        self.output_dir = out_dirs['assembled']
-        if args.quality_control is True:
-            self.qc_dir = out_dirs['trimmed']
-        if args.single_reads is True:
-            self.r_type = 'SE'
-        else:
-            self.r_type = 'PE'
+    def __init__(self, finput, qc_flag, r_type):
+        self.finput = args.finput
+        self.quality_control = qc_flag 
+        self.r_type = 'SE'
 
-    def run_qc(self):
+    def run_qc(self, qc_dir):
+        self.qc_dir = qc_dir 
         p = self._run_sickle()
         print(p.stdout)
         print(p.stderr, file=sys.stderr)
@@ -23,11 +19,11 @@ class VAssemble:
         s_type = 'sanger'
         s_length = '100' 
         if self.r_type == 'SE':
-            fname = os.path.basename(self.input_file[0])
+            fname = os.path.basename(self.finput[0])
             p = sub.run(['sh',
                          'sickle',
                           self.r_rtype,
-                          '-f', self.input_file[0],
+                          '-f', self.finput[0],
                           '-t', s_type,
                           '-l', s_length,
                           '-o', os.path.join(self.qc_dir, 'trimmed-'+fname)
@@ -36,13 +32,13 @@ class VAssemble:
                         stdout=sub.PIPE, stderr=sub.PIPE, check=True
                        )
         else:
-            fname = os.path.basename(self.input_file[0])
-            rname = os.path.basename(self.input_file[1])
+            fname = os.path.basename(self.finput[0])
+            rname = os.path.basename(self.finput[1])
             p = sub.run([
                          'sickle',
                          self.r_type,
-                         '-f', self.input_file[0],
-                         '-r', self.input_file[1],
+                         '-f', self.finput[0],
+                         '-r', self.finput[1],
                          '-t', s_type,
                          '-l', s_length,
                          '-o', os.path.join(self.qc_dir, 'trimemed-'+fname),

@@ -16,7 +16,7 @@ class VSetup:
         parser = argparse.ArgumentParser(description="VLand 2: PHAGE RAGE",
                                          prog="virusland")
         # Input files: 2 PE, 1 SE, or 1 pre-assumbled contigs
-        parser.add_argument('input_file', nargs='+',
+        parser.add_argument('finput', nargs='+',
                             help='Input file(s). Specify 2 PE, 1 SE or '
                                  '1 assembled contigs file(s).')
 
@@ -70,13 +70,17 @@ class VSetup:
                                'must be exclusively specified.')
         # Check number of input files
         if self.args.assembled_contigs is True or self.args.single_reads is True:
-            if len(self.args.input_file) != 1:
+            if len(self.finput) != 1:
                 self._parser.error('A single input file must be specified for '
                                    'single reads or assembled contigs.')
         elif self.args.paired_end_reads is True:
-            if len(self.args.input_file) != 2:
+            if len(self.finput) != 2:
                 self._parser.error('Two input files must be specified for '
                                    'paired end reads')
+        # Check input file path(s) exist.
+        for f in self.finput:
+            if not os.path.exists(f):
+                self._parser.error('Input file: ' + f + ' could not be found.')
         # Check assembler is specified when not using contigs
         if self.args.assembled_contigs is False and self.args.assembler is None:
             self.parser.error('Assembler choice must be spefied when not using '
@@ -110,7 +114,7 @@ class VSetup:
             out_dirs[fdir] = self._make_dir(out_path, fdir)
 
         if self.args.assembled_contigs is True:
-            out_dirs['assembled'] = self.args.input_file
+            out_dirs['assembled'] = self.finput
         else:
             out_dirs['assembled'] = self._make_dir(out_path, 'assembled')
             if self.args.quality_control is True:
@@ -138,7 +142,7 @@ class VSetup:
             if shutil.which(prog, mode=os.X_OK) is None:
                 raise FileNotFoundError('Could not find dependency: '
                                         + prog + '\n'
-                                        'Looking in: '
+                                        'Looking in:\n'
                                         + os.environ['PATH']
                                        )
 
