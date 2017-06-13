@@ -78,7 +78,7 @@ class VSetup:
                 self._parser.error('Two input files must be specified for '
                                    'paired end reads')
         # Check input file path(s) exist.
-        for f in self.finput:
+        for f in self.args.finput:
             if not os.path.exists(f):
                 self._parser.error('Input file: ' + f + ' could not be found.')
         # Check assembler is specified when not using contigs
@@ -114,7 +114,7 @@ class VSetup:
             out_dirs[fdir] = self._make_dir(out_path, fdir)
 
         if self.args.assembled_contigs is True:
-            out_dirs['assembled'] = self.finput
+            out_dirs['assembled'] = self.args.finput
         else:
             out_dirs['assembled'] = self._make_dir(out_path, 'assembled')
             if self.args.quality_control is True:
