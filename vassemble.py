@@ -5,7 +5,7 @@ import os
 class VAssemble:
     def __init__(self, finput, asm_dir, paired_reads):
         self.finput = finput
-        self.asm_dir = asm_dir 
+        self.asm_dir = asm_dir
         self.paired_reads = paired_reads
 
     def run_qc(self, qc_dir):
@@ -22,7 +22,7 @@ class VAssemble:
             fname = os.path.basename(self.finput[0])
             p = sub.check_call([
                          'sickle',
-                          self.r_rtype,
+                          'SE',
                           '-f', self.finput[0],
                           '-t', s_type,
                           '-l', s_length,
@@ -34,7 +34,7 @@ class VAssemble:
             rname = os.path.basename(self.finput[1])
             p = sub.check_call([
                          'sickle',
-                         self.r_type,
+                         'PE',
                          '-f', self.finput[0],
                          '-r', self.finput[1],
                          '-t', s_type,

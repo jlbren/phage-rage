@@ -15,4 +15,4 @@ vasm = vassemble.VAssemble(
 if vconf.args.quality_control is True:
     vasm.run_qc( vconf.out_dirs['trimmed'])
 
-if not vconf.args.assembled_contigs:
+#if not vconf.args.assembled_contigs:

@@ -70,11 +70,11 @@ class VSetup:
                                'must be exclusively specified.')
         # Check number of input files
         if self.args.assembled_contigs is True or self.args.single_reads is True:
-            if len(self.finput) != 1:
+            if len(self.args.finput) != 1:
                 self._parser.error('A single input file must be specified for '
                                    'single reads or assembled contigs.')
         elif self.args.paired_end_reads is True:
-            if len(self.finput) != 2:
+            if len(self.args.finput) != 2:
                 self._parser.error('Two input files must be specified for '
                                    'paired end reads')
         # Check input file path(s) exist.
