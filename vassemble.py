@@ -22,7 +22,7 @@ class VAssemble:
             fname = os.path.basename(self.finput[0])
             p = sub.check_call([
                          'sickle',
-                          'SE',
+                          'se',
                           '-f', self.finput[0],
                           '-t', s_type,
                           '-l', s_length,
@@ -34,7 +34,7 @@ class VAssemble:
             rname = os.path.basename(self.finput[1])
             p = sub.check_call([
                          'sickle',
-                         'PE',
+                         'pe',
                          '-f', self.finput[0],
                          '-r', self.finput[1],
                          '-t', s_type,

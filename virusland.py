@@ -9,7 +9,7 @@ vconf.check_dependencies()
 vasm = vassemble.VAssemble(
                             vconf.args.finput,
                             vconf.out_dirs['assembled'],
-                            vconf.args.paried_end_reads
+                            vconf.args.paired_end_reads
                           )
 
 if vconf.args.quality_control is True:
