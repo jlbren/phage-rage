@@ -41,7 +41,8 @@ class VAssemble:
 
         elif self.assembler == 'megahit':
             print('Running megahit...')
-            p = subprocess.check_call(['megahit'] + asm_input)
+            p = subprocess.check_call(['megahit', '-o', self.asm_dir] 
+				       + asm_input)
 
         else:
             pass # TODO Same problem w default cases that shouldnt happen
