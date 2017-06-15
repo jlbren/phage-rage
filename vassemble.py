@@ -18,8 +18,8 @@ class VAssemble:
     def run_assembly(self, assembler, asm_dir):
         self.assembler = assembler
         self.asm_dir = asm_dir
-        asm_input = _to_formatted_input()
-        _run_assembler(asm_input)
+        asm_input = self._to_formatted_input()
+        self._run_assembler(asm_input)
 
     def _run_assembler(self, asm_input):
         if self.assembler == 'spades': # TODO check if this how u call spades
@@ -30,15 +30,19 @@ class VAssemble:
                                       + asm_input)
 
         elif self.assembler == 'velvet':
-            print('Running velevth..')
+            print('Running velevth...')
             p = subprocess.check_call(['velveth', self.asm_dir,
                                        '31', '-fastq', '-shortPaired'
                                       ]
                                       + asm_input)
+            print('Running velvetg...')
+            p = subprocess.check_call(['velvetg', self.asm_dir, 
+                                       '-exp_cov auto'
+                                      ])
 
         elif self.assembler == 'megahit':
             print('Running megahit...')
-            p = subprocess.check_call(['./megahit/megahit'] + asm_input)
+            p = subprocess.check_call(['megahit'] + asm_input)
 
         else:
             pass # TODO Same problem w default cases that shouldnt happen
