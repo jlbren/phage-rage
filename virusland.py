@@ -7,12 +7,13 @@ vconf = vutils.VSetup(sys.argv[1:])
 vconf.check_dependencies()
 
 vasm = vassemble.VAssemble(
-                            vconf.args.finput,
-                            vconf.out_dirs['assembled'],
+                            vconf.args.finputi,
                             vconf.args.paired_end_reads
                           )
 
 if vconf.args.quality_control is True:
-    vasm.run_qc( vconf.out_dirs['trimmed'])
+    vasm.run_qc(vconf.out_dirs['trimmed'])
 
-#if not vconf.args.assembled_contigs:
+if vcong.args.assembled_contigs is False:
+    vasm.run_assembly(vconf.args.assembler, vconf.out_dirs['assembled'])
+

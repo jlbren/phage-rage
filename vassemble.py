@@ -13,37 +13,35 @@ class VAssemble:
         self.qc_dir = qc_dir
         self._run_sickle()
         self.qc = True
-        #self.finput = glob(self.qc_dir)
-        # TODO redirect input to trimmed files/
         # TODO implement logging
 
-    def run_assembly(self, asm_dir, assembler):
+    def run_assembly(self, assembler, asm_dir):
         self.assembler = assembler
         self.asm_dir = asm_dir
         asm_input = _to_formatted_input()
         _run_assembler(asm_input)
-    
+
     def _run_assembler(self, asm_input):
-        if self.assembler == 'spades': # TODO check if this how u call spades 
+        if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
             p = subprocess.check_call(['python', 'spades.py',
-                                       '-o', self.asm_dir  
+                                       '-o', self.asm_dir
                                       ]
                                       + asm_input)
-        
+
         elif self.assembler == 'velvet':
             print('Running velevth..')
-            p = subprocess.check_call(['velveth', self.asm_dir, 
+            p = subprocess.check_call(['velveth', self.asm_dir,
                                        '31', '-fastq', '-shortPaired'
                                       ]
                                       + asm_input)
-        
-        elif self.assembler == 'megahit': 
+
+        elif self.assembler == 'megahit':
             print('Running megahit...')
             p = subprocess.check_call(['./megahit/megahit'] + asm_input)
-        
-        else: 
-            pass # TODO Same problem w default cases that shouldnt happen 
+
+        else:
+            pass # TODO Same problem w default cases that shouldnt happen
 
     def _run_sickle(self):
         s_type = 'sanger'
