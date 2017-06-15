@@ -1,12 +1,12 @@
-import subprocess as sub
+import subprocess 
 import sys
 import os
 from glob import glob
 
 class VAssemble:
-    def __init__(self, finput, paired_reads):
+    def __init__(self, finput, paired_end_reads):
         self.finput = finput
-        self.paired_reads = paired_reads
+        self.paired_end_reads = paired_end_reads
         self.qc = False
 
     def run_qc(self, qc_dir):
@@ -24,9 +24,8 @@ class VAssemble:
     def _run_assembler(self, asm_input):
         if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
-            p = subprocess.check_call(['python', 'spades.py',
-                                       '-o', self.asm_dir
-                                      ]
+            p = subprocess.check_call(['spades.py',
+				       '-o', self.asm_dir]
                                       + asm_input)
 
         elif self.assembler == 'velvet':
@@ -37,7 +36,7 @@ class VAssemble:
                                       + asm_input)
             print('Running velvetg...')
             p = subprocess.check_call(['velvetg', self.asm_dir, 
-                                       '-exp_cov auto'
+                                       '-exp_cov', 'auto'
                                       ])
 
         elif self.assembler == 'megahit':
@@ -51,10 +50,10 @@ class VAssemble:
         s_type = 'sanger'
         s_length = '100'
         foutput = []
-        if not self.paired_reads:
+        if not self.paired_end_reads:
             fname = 'trimmed-'+os.path.basename(self.finput[0])
             fouput.append(os.path.join(self.qc_dir, fname))
-            p = sub.check_call([
+            p = subprocess.check_call([
                           'sickle',
                           'se',
                           '-f', self.finput[0],
@@ -69,15 +68,15 @@ class VAssemble:
             foutput.append(os.path.join(self.qc_dir, fname))
             foutput.append(os.path.join(self.qc_dir, rname))
 
-            p = sub.check_call([
+            p = subprocess.check_call([
                          'sickle',
                          'pe',
                          '-f', self.finput[0],
                          '-r', self.finput[1],
                          '-t', s_type,
                          '-l', s_length,
-                         '-o', os.path.join(self.qc_dir, 'trimemed-'+fname),
-                         '-p', os.path.join(self.qc_dir, 'trimmed-'+rname),
+                         '-o', os.path.join(self.qc_dir, fname),
+                         '-p', os.path.join(self.qc_dir, rname),
                          '-s', os.path.join(self.qc_dir, 'singletons.fastq')
                         ])
         return p
@@ -86,7 +85,7 @@ class VAssemble:
         if self.qc is True:
             return self._get_trimmed_input()
         else:
-            if paired_end_reads is True:
+            if self.paired_end_reads is True:
                 if self.assembler == 'velvet':
                     return self.finput
 
@@ -121,17 +120,17 @@ class VAssemble:
                     pass # TODO see above todo
 
 
-    def _get_trimmed_input():
+    def _get_trimmed_input(self):
         if self.paired_end_reads is True:
             trimmed = glob(os.path.join(self.qc_dir, 'trimmed*'))
             if self.assembler == 'velvet':
-                return glob(self.qc_dir)
+                return glob(os.path.join(self.qc_dir, '*')) 
 
             elif self.assembler == 'spades':
                 return [
                         '--pe1-1', trimmed[0],
                         '--pe1-2', trimmed[1],
-                        '--pe1-s', os.path.join(self.qc_dir, 'singletons.fasta'),
+                        '--pe1-s', os.path.join(self.qc_dir, 'singletons.fastq'),
                         '--meta'
                        ]
 

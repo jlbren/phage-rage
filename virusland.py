@@ -4,16 +4,16 @@ import vassemble
 
 # pass list of arguments to VSetup
 vconf = vutils.VSetup(sys.argv[1:])
-vconf.check_dependencies()
+#vconf.check_dependencies() TODO fix dependency checkers 
 
 vasm = vassemble.VAssemble(
-                            vconf.args.finputi,
+                            vconf.args.finput,
                             vconf.args.paired_end_reads
                           )
 
 if vconf.args.quality_control is True:
     vasm.run_qc(vconf.out_dirs['trimmed'])
 
-if vcong.args.assembled_contigs is False:
+if vconf.args.assembled_contigs is False:
     vasm.run_assembly(vconf.args.assembler, vconf.out_dirs['assembled'])
 
