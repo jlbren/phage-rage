@@ -19,7 +19,15 @@ class VSetup:
         parser.add_argument('finput', nargs='+',
                             help='Input file(s). Specify 2 PE, 1 SE or '
                                  '1 assembled contigs file(s).')
-
+        # Mapper type
+        parser.add_argument('-m', '--mapper',
+                            choices=[
+                                'blast',
+                                'pauda',
+                                'lambda',
+                                'diamond'
+                                ],
+                            help='BLAST or similar mapping method.')
         # Assembler type or assembled contig flag
         group_a = parser.add_mutually_exclusive_group()
         group_a.add_argument('-a', '--assembler',
