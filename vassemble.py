@@ -7,7 +7,7 @@ class VAssemble:
     def __init__(self, finput, paired_end_reads, threads):
         self.finput = finput
         self.paired_end_reads = paired_end_reads
-        self.threads = threads
+        self.threads = str(threads)
         self.qc = False
 
     def run_qc(self, qc_dir):
@@ -26,7 +26,7 @@ class VAssemble:
         if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
             p = subprocess.check_call(['spades.py',
-                                       '--threads', self.threads
+                                       '--threads', self.threads,
 				       '-o', self.asm_dir]
                                       + asm_input)
 
