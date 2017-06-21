@@ -1,12 +1,13 @@
-import subprocess 
+import subprocess
 import sys
 import os
 from glob import glob
 
 class VAssemble:
-    def __init__(self, finput, paired_end_reads):
+    def __init__(self, finput, paired_end_reads, threads):
         self.finput = finput
         self.paired_end_reads = paired_end_reads
+        self.threads = threads
         self.qc = False
 
     def run_qc(self, qc_dir):
@@ -25,6 +26,7 @@ class VAssemble:
         if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
             p = subprocess.check_call(['spades.py',
+                                       '--threads', self.threads
 				       '-o', self.asm_dir]
                                       + asm_input)
 
@@ -35,14 +37,17 @@ class VAssemble:
                                       ]
                                       + asm_input)
             print('Running velvetg...')
-            p = subprocess.check_call(['velvetg', self.asm_dir, 
+            p = subprocess.check_call(['velvetg', self.asm_dir,
                                        '-exp_cov', 'auto'
                                       ])
 
         elif self.assembler == 'megahit':
             print('Running megahit...')
-            p = subprocess.check_call(['megahit', '-o', self.asm_dir] 
-				       + asm_input)
+            p = subprocess.check_call(['megahit',
+                                       '-t', self.threads,
+                                       '-o', self.asm_dir
+                                      ]
+				      + asm_input)
 
         else:
             pass # TODO Same problem w default cases that shouldnt happen
@@ -125,7 +130,7 @@ class VAssemble:
         if self.paired_end_reads is True:
             trimmed = glob(os.path.join(self.qc_dir, 'trimmed*'))
             if self.assembler == 'velvet':
-                return glob(os.path.join(self.qc_dir, '*')) 
+                return glob(os.path.join(self.qc_dir, '*'))
 
             elif self.assembler == 'spades':
                 return [
