@@ -4,14 +4,14 @@ import os
 # pauda-run <input file> <outputFileBlastx> <databaseDirectory>
 
 def run_pauda(input_filename, index_directory, output_name):
-    
+
     # pauda build
-    index_input = 'viral_aa.fasta' 
+    index_input = 'viral_aa.fasta'
     pauda_build_command = './pauda/bin/pauda-build ' + index_input + ' ' + index_directory
     print(pauda_build_command)
     os.system(pauda_build_command)
 
-    # pauda run 
+    # pauda run
     pauda_command = 'pauda/bin/pauda-run ' + input_filename + ' /temp/paudaAssembly/' + output_name + ' ' + index_directory
     print(pauda_command)
     os.system(pauda_command)

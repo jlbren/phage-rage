@@ -3,22 +3,24 @@ import sys
 import os
 from glob import glob
 
-class VMap: 
+class VMap:
     def __init__(self, finput, threads):
         self.finput = finput
-        self.threads = threads 
+        self.threads = threads
 
     def run_map(self, mapper, index_dir, map_dir):
         self.mapper = mapper
         self.map_dir = map_dir
-        self.index_dir = index_dir 
-    
+        self.index_dir = index_dir
+
     def get_orfs(self):
-        pass 
+        pass
 
     def _run_mapper(self):
         if self.mapper == 'blast':
-            pass
+            subprocess.check_call(['blastp',
+                                   ''
+                                  ])
 
         elif self.mapper == 'pauda':
             print('Running pauda...')
@@ -28,7 +30,7 @@ class VMap:
                                    self.index_dir
 
                                   ])
-            
+
 
         elif self.mapper == 'lambda':
             print('Running lambda...')

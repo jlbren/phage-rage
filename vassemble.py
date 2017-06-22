@@ -2,6 +2,7 @@ import subprocess
 import sys
 import os
 from glob import glob
+import shutil
 
 class VAssemble:
     def __init__(self, finput, paired_end_reads, threads):
@@ -9,7 +10,7 @@ class VAssemble:
         self.paired_end_reads = paired_end_reads
         self.threads = str(threads)
         self.qc = False
-
+        self.contigs = None
     def run_qc(self, qc_dir):
         self.qc_dir = qc_dir
         self._run_sickle()
@@ -42,17 +43,21 @@ class VAssemble:
                                       ])
 
         elif self.assembler == 'megahit':
+            temp_out = os.path.join(self.asm_dir, 'megahit')
             print('Running megahit...')
             p = subprocess.check_call(['megahit',
                                        '-t', self.threads,
-                                       '-o', self.asm_dir+'/megahit' 
+                                       '-o', temp_out
                                       ]
 				      + asm_input)
+
+            vutil.copy_and_remove(temp_out, self.asm_dir)
 
         else:
             pass # TODO Same problem w default cases that shouldnt happen
 
     def _run_sickle(self):
+        print('Running sickle...')
         s_type = 'sanger'
         s_length = '100'
         foutput = []

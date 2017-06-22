@@ -3,6 +3,7 @@ import argparse
 import sys
 import os
 import shutil
+from glob import glob
 
 class VSetup:
     def __init__(self, argv_):
@@ -153,6 +154,12 @@ class VSetup:
                                         'Looking in:\n'
                                         + os.environ['PATH']
                                        )
+
+
+def copy_and_remove(src, dest):
+    for f in glob(os.path.jon(src,'*')):
+        shutil.move(f, dest)
+    shutil.rmtree(src)
 
 if __name__ == '__main__':
     v = VSetup(sys.argv[1:])
