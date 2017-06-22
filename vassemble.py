@@ -45,7 +45,7 @@ class VAssemble:
             print('Running megahit...')
             p = subprocess.check_call(['megahit',
                                        '-t', self.threads,
-                                       '-o', self.asm_dir
+                                       '-o', self.asm_dir+'/megahit' 
                                       ]
 				      + asm_input)
 
@@ -58,7 +58,7 @@ class VAssemble:
         foutput = []
         if not self.paired_end_reads:
             fname = 'trimmed-'+os.path.basename(self.finput[0])
-            fouput.append(os.path.join(self.qc_dir, fname))
+            foutput.append(os.path.join(self.qc_dir, fname))
             p = subprocess.check_call([
                           'sickle',
                           'se',
@@ -127,8 +127,8 @@ class VAssemble:
 
 
     def _get_trimmed_input(self):
+        trimmed = glob(os.path.join(self.qc_dir, 'trimmed*'))
         if self.paired_end_reads is True:
-            trimmed = glob(os.path.join(self.qc_dir, 'trimmed*'))
             if self.assembler == 'velvet':
                 return glob(os.path.join(self.qc_dir, '*'))
 
