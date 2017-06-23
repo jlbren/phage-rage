@@ -21,7 +21,7 @@ if vconf.args.assembled_contigs is False:
 # TODO clean up these functins, everything shouldnt be in constructor if possible 
 vmapper = vmap.VMap(vasm.contigs, 
                     vconf.args.mapper, 
-                    vcong.out_dirs['mapped'], 
+                    vconf.out_dirs['mapped'], 
                     vconf.args.threads)
 vmapper.build_index(vconf.args.index)
 vmapper.run_map()
