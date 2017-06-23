@@ -4,13 +4,13 @@ import os
 from glob import glob
 
 class VMap:
-    def __init__(self, finput, threads):
+    def __init__(self, finput, mapper, map_dir, threads):
         self.finput = finput
         self.threads = str(threads)
-
-    def run_map(self, mapper, map_dir):
-        self.mapper = mapper
         self.map_dir = map_dir
+        self.mapper = mapper
+
+    def run_map(self):
         self._get_orfs()
         self._run_mapper()
 
@@ -18,7 +18,7 @@ class VMap:
         print('Running getorf...')
         self.orfs = os.path.join(self.map_dir, 'predicted_orfs.faa')
         subprocess.check_call(['getorf',
-                               '-find', '0' # NOTE 0 is for AA, 2 for NUC
+                               '-find', '0', # NOTE 0 is for AA, 2 for NUC
                                self.finput,
                                self.orfs
                               ])
@@ -36,7 +36,7 @@ class VMap:
             print('Running pauda...')
             subprocess.check_call(['pauda-run',
                                    self.orfs,
-                                   self.mapper_dir,
+                                   self.map_dir,
                                    self.index_dir
 
                                   ])
@@ -53,7 +53,7 @@ class VMap:
             subprocess.check_call(['diamond', 'blastp',
                                    '-d', self.index_dir,
                                    '-q', self.orfs,
-                                   '-o', self.mapper_dir
+                                   '-o', self.map_dir,
                                    '--threads', self.threads
                                   ])
 
@@ -63,40 +63,40 @@ class VMap:
 
     def build_index(self, index_input):
         print("Building index...")
-        self.index_dir = os.path.join(self.mapper_dir, 'index')
+        self.index_dir = os.path.join(self.map_dir, 'index')
         if self.mapper == 'diamond':
-            subprocess.check_call(['diamond makedb'
+            subprocess.check_call(['diamond', 'makedb'
                                    '--in', index_input,
-                                   '-d', index_dir,
+                                   '-d', self.index_dir,
                                   ])
 
         elif self.mapper == 'pauda':
-            subprocess.check_call(['pauda-build'
+            subprocess.check_call(['pauda-build',
                                    index_input,
-                                   index_dir
+                                   self.index_dir
                                   ])
 
         elif self.mapper == 'lambda':
             subprocess.check_call(['lambda-indexer'
                                    '-d', index_input,
-                                   '-i', index_directory
+                                   '-i', self.index_dir
                                   ])
 
         elif self.mapper == 'blast':
             subprocess.check_call(['makeblastdb',
                                    '-in', index_input,
                                    '-dbtype', 'prot',
-                                   '-out', index_directory
+                                   '-out', self.index_dir
                     ])
         else:
             pass # TODO u already kno
 # Test
 if __name__ == '__main__':
-    contigs = sys.agrv[1]
+    contigs = sys.argv[1]
     mapper_dir = sys.argv[2]
     index_input = sys.argv[3]
     mapper = sys.argv[4]
 
-    m = VMap(contigs, 12)
+    m = VMap(contigs, mapper, mapper_dir, 12)
     m.build_index(index_input)
-    m.run_map(mapper, mapper_dir)
+    m.run_map()
