@@ -44,9 +44,11 @@ class VMap:
 
         elif self.mapper == 'lambda': # TODO multithreads?
             print('Running lambda...')
-            subprocess.check_call(['lambda',
+            subprocess.check_call(['lambda', 
+                                   '-p', 'blastp',
                                    '-q', self.orfs,
-                                   '-i', self.index_dir
+                                   '-i', self.index_dir,
+                                   '-o', self.map_dir + '/lambda_out.m8' # TODO make these output file names unified 
                                   ])
 
         elif self.mapper == 'diamond':
@@ -71,13 +73,14 @@ class VMap:
                                   ])
 
         elif self.mapper == 'pauda':
-            subprocess.check_call(['pauda-build',
+            subprocess.check_call(['/home/biotech3/vlib/pauda-1.0.1/bin/pauda-build',
                                    index_input,
                                    self.index_dir
                                   ])
 
         elif self.mapper == 'lambda':
-            subprocess.check_call(['lambda-indexer',
+            self.index_dir = self.index_dir + '.lambda' # lambda specific format
+            subprocess.check_call(['lambda_indexer',
                                    '-d', index_input,
                                    '-i', self.index_dir
                                   ])

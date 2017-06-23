@@ -20,8 +20,12 @@ class VSetup:
         parser.add_argument('finput', nargs='+',
                             help='Input file(s). Specify 2 PE, 1 SE or '
                                  '1 assembled contigs file(s).')
+
+        parser.add_argument('-i', '--index', required=True,
+                            help='File to be used when building mapper index.\n')
+                                 
         # Mapper type
-        parser.add_argument('-m', '--mapper',
+        parser.add_argument('-m', '--mapper', required=True,
                             choices=[
                                 'blast',
                                 'pauda',
@@ -118,6 +122,7 @@ class VSetup:
         dir_list = [
                     'stats',
                     'logs',
+		    'mapped'
                    ]
         for fdir in dir_list:
             out_dirs[fdir] = self._make_dir(out_path, fdir)
