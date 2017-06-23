@@ -53,7 +53,7 @@ class VMap:
             subprocess.check_call(['diamond', 'blastp',
                                    '-d', self.index_dir,
                                    '-q', self.orfs,
-                                   '-o', self.map_dir,
+                                   '-o', self.map_dir+'/diamond_out.csv',
                                    '--threads', self.threads
                                   ])
 
@@ -65,7 +65,7 @@ class VMap:
         print("Building index...")
         self.index_dir = os.path.join(self.map_dir, 'index')
         if self.mapper == 'diamond':
-            subprocess.check_call(['diamond', 'makedb'
+            subprocess.check_call(['diamond', 'makedb',
                                    '--in', index_input,
                                    '-d', self.index_dir,
                                   ])
@@ -77,7 +77,7 @@ class VMap:
                                   ])
 
         elif self.mapper == 'lambda':
-            subprocess.check_call(['lambda-indexer'
+            subprocess.check_call(['lambda-indexer',
                                    '-d', index_input,
                                    '-i', self.index_dir
                                   ])
