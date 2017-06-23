@@ -92,7 +92,8 @@ if __name__ == '__main__':
     contigs = sys.agrv[1]
     mapper_dir = sys.argv[2]
     index_input = sys.argv[3]
+    mapper = sys.argv[4]
 
-    m = VMap(contigs, mapper_dir)
+    m = VMap(contigs, 12)
     m.build_index(index_input)
-    m.run_map() 
+    m.run_map(mapper, mapper_dir)
