@@ -30,6 +30,7 @@ class VAssemble:
                                        '--threads', self.threads,
 				       '-o', self.asm_dir]
                                       + asm_input)
+            self.contigs = os.path.join(self.asm_dir, 'contigs.fasta')
 
         elif self.assembler == 'velvet':
             print('Running velevth...')
@@ -41,6 +42,7 @@ class VAssemble:
             p = subprocess.check_call(['velvetg', self.asm_dir,
                                        '-exp_cov', 'auto'
                                       ])
+            self.contigs = os.path.join(self.asm_dir, 'contigs.fa')
 
         elif self.assembler == 'megahit':
             temp_out = os.path.join(self.asm_dir, 'megahit')
@@ -51,7 +53,8 @@ class VAssemble:
                                       ]
 				      + asm_input)
 
-            vutil.copy_and_remove(temp_out, self.asm_dir)
+            vutils.copy_and_remove(temp_out, self.asm_dir)
+            self.contigs = os.path.join(self.asm_dir, 'final.contigs.fa')
 
         else:
             pass # TODO Same problem w default cases that shouldnt happen

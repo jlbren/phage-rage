@@ -157,7 +157,7 @@ class VSetup:
 
 
 def copy_and_remove(src, dest):
-    for f in glob(os.path.jon(src,'*')):
+    for f in glob(os.path.join(src,'*')):
         shutil.move(f, dest)
     shutil.rmtree(src)
 
