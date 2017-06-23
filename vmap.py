@@ -15,6 +15,7 @@ class VMap:
         self._run_mapper()
 
     def _get_orfs(self): # TODO make sure -find is good 
+        print('Running getorf...')
         self.orfs = os.path.join(self.map_dir, 'predicted_orfs.faa')
         subprocess.check_call(['getorf',
                                '-find', '0' # NOTE 0 is for AA, 2 for NUC
@@ -23,6 +24,7 @@ class VMap:
                               ])
     def _run_mapper(self):
         if self.mapper == 'blast':
+            print("Running blast...")
             subprocess.check_call(['blastp',
                                    '-query', self.orfs,
                                    '-db', self.index_dir,
@@ -60,6 +62,7 @@ class VMap:
 
 
     def build_index(self, index_input):
+        print("Building index...")
         self.index_dir = os.path.join(self.mapper_dir, 'index')
         if self.mapper == 'diamond':
             subprocess.check_call(['diamond makedb'
