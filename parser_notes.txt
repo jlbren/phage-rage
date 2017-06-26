@@ -1,0 +1,36 @@
+Genome class
+- total num proteins in genome 
+- array of prot acc nums
+- number of hits per protein (hint: use same index)
+- acc num of genome
+- species name 
+
+Super file 
+- total number of genomes in faa collection 
+- array of all genomes (above class) 
+- write out summary stats
+- write out for Krona 
+- write out for HitViz 
+- parse hits per output type (?) 
+
+make_protein_list_file 
+- creats tab sep list:
+	genome acc num, p accnum, species 
+- accepts file of files (?) 
+
+args: 
+- blastx or similar tool 
+- pauda/lambda indicator 
+- eval threshold 
+- file whis is a list of all faa fasta files used
+  for 
+  index 
+- parsed orf file from Pauda or lambda (parsed?) 
+
+
+RUN 
+---
+main
+- detrmine pauda or lambda 
+- call make_protein_list_file 
+    - pass faa list
