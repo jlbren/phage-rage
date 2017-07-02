@@ -19,6 +19,7 @@ class VMap:
         self.orfs = os.path.join(self.map_dir, 'predicted_orfs.faa')
         subprocess.check_call(['getorf',
                                '-find', '0', # NOTE 0 is for AA, 2 for NUC
+                               '-minsize 90',
                                self.finput,
                                self.orfs
                               ])
@@ -28,17 +29,19 @@ class VMap:
             subprocess.check_call(['blastp',
                                    '-query', self.orfs,
                                    '-db', self.index_dir,
-                                   '-outfmt', '10', # TODO specific outfmt
+                                   '-max_target_seqs', '1',
+                                   '-evalue', '1',
+                                   '-out', self.map_dir #TODO is this the output file?
+                                   '-outfmt', '"10 qseqid sseqid qstart qend pident length evalue bitscore"', 
                                    '-num_threads', self.threads
                                   ])
 
-        elif self.mapper == 'pauda': # TODO multithreads?
+        elif self.mapper == 'pauda':
             print('Running pauda...')
             subprocess.check_call(['pauda-run',
-                                   self.orfs,
+                                   self.orfs, 
                                    self.map_dir,
-                                   self.index_dir
-
+                                   self.index_dir,
                                   ])
 
 
@@ -48,15 +51,18 @@ class VMap:
                                    '-p', 'blastp',
                                    '-q', self.orfs,
                                    '-i', self.index_dir,
-                                   '-o', self.map_dir + '/lambda_out.m8' # TODO make these output file names unified 
+                                   '-t', self.threads,
+                                   '-o', self.map_dir + '/lambda_out.m8', # TODO make these output file names unified
+                                   '--output-columns', '"qseqid sseqid qstart qend pident length evalue bitscore"'
                                   ])
 
         elif self.mapper == 'diamond':
             subprocess.check_call(['diamond', 'blastp',
                                    '-d', self.index_dir,
+                                   '--threads', self.threads,
                                    '-q', self.orfs,
                                    '-o', self.map_dir+'/diamond_out.csv',
-                                   '--threads', self.threads
+                                   '--outfmt 6 qseqid sseqid qstart qend pident length evalue bitscore'
                                   ])
 
         else:
