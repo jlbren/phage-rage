@@ -35,10 +35,10 @@ class VParse:
         self.index_file = None
 
     def parse_index(self, gbk_dir, out_dir):
+        print('Parsing GBK directory:', gbk_dir)
         self.gbk_dir = gbk_dir
         self.out_dir = out_dir
         self.gbk_files = self.parse_gbk_dir(gbk_dir)
-        print(self.gbk_files)
         self.index_file = self.parse_gbk_files(self.gbk_files, self.out_dir)
 
     def parse_gbk_files(self, gbk_file_list, out_dir):
@@ -53,12 +53,9 @@ class VParse:
                                  )
                 protein_list = []
                 for feature in record.features:
-                    print(feature)
-                    #print(dir(feature))
-                    #input("")
-                    if feature.type == "CDS": # TODO doubling
+                    if (feature.type == "CDS"
+                         and 'translation' in feature.qualifiers): # kill pseudo genes
                         assert len(feature.qualifiers['translation']) == 1 # TODO ask about this
-                        #print(feature.qaulifiers['protein_id'])
                         protein_list.append(feature.qualifiers['protein_id'][0])
                         out_string = ('>%s|ref|%s|%s\n%s\n' %
                             (feature.qualifiers['db_xref'][0].replace(':', '|'),
@@ -67,8 +64,6 @@ class VParse:
                              feature.qualifiers['translation'][0]
                             ))
                         output = out_string.replace(' ', '_')
-                        print('writing:')
-                        print(output)
                         output_handle.write(output) # TODO ask if this is good
                 organism.set_proteins(protein_list)
                 self.genomes.append(organism)
@@ -103,6 +98,3 @@ if __name__ == '__main__':
     for g in vp.genomes:
         print(g.genome_acc, g.species)
         print(g.protein_acc_list)
-     #  print('gacc: %s, spec: %s, tax: %s, proteins: %s, hits: %s\n'
-     #        (g.genome_acc, g.species, g.taxonomy,
-     #         g.protein_acc_list, g.protein_hit_list))
