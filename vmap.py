@@ -17,7 +17,7 @@ class VMap:
     def _get_orfs(self): # TODO make sure -find is good 
         print('Running getorf...')
         self.orfs = os.path.join(self.map_dir, 'predicted_orfs.faa')
-        print(self.orgs)
+        print(self.orfs)
         print(self.finput)
         subprocess.check_call(['getorf',
                                '-find', '0', # NOTE 0 is for AA, 2 for NUC
