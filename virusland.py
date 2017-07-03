@@ -2,6 +2,7 @@ import sys
 import vutils
 import vassemble
 import vmap
+import vparse
 # pass list of arguments to VSetup
 vconf = vutils.VSetup(sys.argv[1:])
 #vconf.check_dependencies() TODO fix dependency checkers
