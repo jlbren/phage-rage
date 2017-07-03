@@ -23,5 +23,7 @@ vmapper = vmap.VMap(vasm.contigs,
                     vconf.args.mapper, 
                     vconf.out_dirs['mapped'], 
                     vconf.args.threads)
-vmapper.build_index(vconf.args.index)
+vparser = VParse()
+vparser.parse_index(vconf.args.index, vconf.out_dirs['mapped'])
+vmapper.build_index(vparser.index_file)
 vmapper.run_map()

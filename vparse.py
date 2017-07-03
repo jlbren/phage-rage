@@ -32,13 +32,14 @@ class VParse:
         self.gbk_files = None
         self.faa_index = None
         self.out_dir = None
+        self.index_file = None
 
     def parse_index(self, gbk_dir, out_dir):
         self.gbk_dir = gbk_dir
         self.out_dir = out_dir
         self.gbk_files = self.parse_gbk_dir(gbk_dir)
         print(self.gbk_files)
-        self.parse_gbk_files(self.gbk_files, self.out_dir)
+        self.index_file = self.parse_gbk_files(self.gbk_files, self.out_dir)
 
     def parse_gbk_files(self, gbk_file_list, out_dir):
         index_file = os.path.join(out_dir,'index.faa')
@@ -48,7 +49,8 @@ class VParse:
             for record in SeqIO.parse(input_handle, 'genbank'):
                 organism = Genome(record.name,
                                   record.annotations['organism'],
-                                  record.annotations['taxonomy'])
+                                  record.annotations['taxonomy']
+                                 )
                 protein_list = []
                 for feature in record.features:
                     print(feature)
@@ -59,8 +61,7 @@ class VParse:
                         #print(feature.qaulifiers['protein_id'])
                         protein_list.append(feature.qualifiers['protein_id'][0])
                         out_string = ('>%s|ref|%s|%s\n%s\n' %
-                            (
-                             feature.qualifiers['db_xref'][0].replace(':', '|'),
+                            (feature.qualifiers['db_xref'][0].replace(':', '|'),
                              feature.qualifiers['protein_id'][0],
                              feature.qualifiers['product'][0],
                              feature.qualifiers['translation'][0]
@@ -74,6 +75,7 @@ class VParse:
                 g = self.genomes[0]
             input_handle.close()
         output_handle.close()
+        return index_file
 
 
 
