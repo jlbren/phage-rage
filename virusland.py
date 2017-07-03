@@ -20,7 +20,8 @@ if vconf.args.assembled_contigs is False:
     vasm.run_assembly(vconf.args.assembler, vconf.out_dirs['assembled'])
     contigs = vasm.contigs
 else:
-    contigs = vconf.args.assembled_contigs # TODO make nicer
+    contigs = vconf.args.finput # TODO make nicer
+print('contigs:', contigs )
 vparser = vparse.VParse()
 vparser.parse_index(vconf.args.index, vconf.out_dirs['mapped'])
 # TODO clean up these functins, everything shouldnt be in constructor if possible 
