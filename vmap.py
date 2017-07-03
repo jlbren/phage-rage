@@ -33,9 +33,9 @@ class VMap:
                                    '-db', self.index_dir,
                                    '-max_target_seqs', '1',
                                    '-evalue', '1',
-                                   '-out', self.map_dir, #TODO is this the output file?
+                                   '-out', self.map_dir+'/blast_out.m8', #TODO is this the output file?
                                    '-outfmt', 
-                                   '"10 qseqid sseqid qstart qend pident length evalue bitscore"', 
+                                   '10 qseqid sseqid qstart qend pident length evalue bitscore', 
                                    '-num_threads', self.threads
                                   ])
 
@@ -57,7 +57,7 @@ class VMap:
                                    '-t', self.threads,
                                    '-o', self.map_dir + '/lambda_out.m8', # TODO make these output file names unified
                                    '--output-columns', 
-                                   '"qseqid sseqid qstart qend pident length evalue bitscore"'
+                                   'qseqid sseqid qstart qend pident length evalue bitscore'
                                   ])
 
         elif self.mapper == 'diamond':
@@ -67,7 +67,8 @@ class VMap:
                                    '-q', self.orfs,
                                    '-o', self.map_dir+'/diamond_out.csv',
                                    '--outfmt',
-                                   '6 qseqid sseqid qstart qend pident length evalue bitscore'
+                                   '6', 'qseqid', 'sseqid', 'qstart', 'qend', 'pident',
+				   'length', 'evalue', 'bitscore'
                                   ])
 
         else:
