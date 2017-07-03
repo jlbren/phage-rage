@@ -17,9 +17,11 @@ class VMap:
     def _get_orfs(self): # TODO make sure -find is good 
         print('Running getorf...')
         self.orfs = os.path.join(self.map_dir, 'predicted_orfs.faa')
+        print(self.orgs)
+        print(self.finput)
         subprocess.check_call(['getorf',
                                '-find', '0', # NOTE 0 is for AA, 2 for NUC
-                               '-minsize 90',
+                               '-minsize', '90',
                                self.finput,
                                self.orfs
                               ])
@@ -32,7 +34,8 @@ class VMap:
                                    '-max_target_seqs', '1',
                                    '-evalue', '1',
                                    '-out', self.map_dir, #TODO is this the output file?
-                                   '-outfmt', '"10 qseqid sseqid qstart qend pident length evalue bitscore"', 
+                                   '-outfmt', 
+                                   '"10 qseqid sseqid qstart qend pident length evalue bitscore"', 
                                    '-num_threads', self.threads
                                   ])
 
@@ -53,7 +56,8 @@ class VMap:
                                    '-i', self.index_dir,
                                    '-t', self.threads,
                                    '-o', self.map_dir + '/lambda_out.m8', # TODO make these output file names unified
-                                   '--output-columns', '"qseqid sseqid qstart qend pident length evalue bitscore"'
+                                   '--output-columns', 
+                                   '"qseqid sseqid qstart qend pident length evalue bitscore"'
                                   ])
 
         elif self.mapper == 'diamond':
@@ -62,7 +66,8 @@ class VMap:
                                    '--threads', self.threads,
                                    '-q', self.orfs,
                                    '-o', self.map_dir+'/diamond_out.csv',
-                                   '--outfmt 6 qseqid sseqid qstart qend pident length evalue bitscore'
+                                   '--outfmt',
+                                   '6 qseqid sseqid qstart qend pident length evalue bitscore'
                                   ])
 
         else:
