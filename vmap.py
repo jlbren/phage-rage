@@ -31,7 +31,7 @@ class VMap:
                                    '-db', self.index_dir,
                                    '-max_target_seqs', '1',
                                    '-evalue', '1',
-                                   '-out', self.map_dir #TODO is this the output file?
+                                   '-out', self.map_dir, #TODO is this the output file?
                                    '-outfmt', '"10 qseqid sseqid qstart qend pident length evalue bitscore"', 
                                    '-num_threads', self.threads
                                   ])
