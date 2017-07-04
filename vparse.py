@@ -90,6 +90,20 @@ class VParse:
         self.write_out_for_hitviz(stats_dir)
         self.write_out_for_krona(stats_dir)
 
+    def write_out_for_krona(self, stats_dir):
+        krona_file = os.path.join(stats_dir, 'krona_stats.csv')
+        print('Writing out for Krona to:', krona_file)
+        with open(krona_file) as out_put(handle):
+            for genome in self.genomes:
+                if genome.total_hits_to_genome > 0:
+                    tax = '\t'.join(genome.taxonomy)
+                    output_handle.write('%d\t%s\t%s\n' %
+                            (genome.total_hits_to_genome,
+                             tax,
+                             genome.species
+                            )
+                           )
+
     def write_out_for_hitviz(self, stats_dir):
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
         print('Writing out for HitViz to:', hitviz_file)
@@ -103,7 +117,7 @@ class VParse:
                             )
                     for i in range(len(genome.protein_list)):
                         if genome.protein_hit_list[i] > 0: # TODO ask about no hits
-                            output_handle.write('%s|%s|\n' %
+                            output_handle.write('%s|%d|\n' %
                                     (genome.protein_list[i],
                                      genome.protein_hit_list[i]
                                     )
@@ -213,5 +227,4 @@ if __name__ == '__main__':
 
     vp.parse_hits_file(hits_input, 50)
     vp.generate_statistics()
-    vp.write_out_summary_statistics(out_dir)
-    vp.write_out_for_hitviz(out_dir)
+    vp.write_out_all_stats(out_dir)
