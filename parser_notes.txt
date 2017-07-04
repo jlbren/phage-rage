@@ -34,3 +34,8 @@ main
 - detrmine pauda or lambda 
 - call make_protein_list_file 
     - pass faa list
+
+done: 
+proteinlist,
+super file init, 
+populate genome 

@@ -10,7 +10,7 @@ class Genome:
         self.species = species
         self.protein_list = []
         self.protein_hit_list = []
-        self.total_proteins_hit = 0 
+        self.total_proteins_hit = 0
         self.total_hits_to_genome = 0
         self.total_percent_hit = 0
 
@@ -37,9 +37,9 @@ class Genome:
         if self.total_proteins_hit == 0:
             self.total_proteins_hit = self.get_number_of_proteins_with_hits()
         num_proteins = len(self.protein_list)
-        if num_proteins > 0 and self.total_proteins_hit > 0:        
-            percent_hit = float((self.total_proteins_hit/num_proteins)*100.00) 
-            if percent_hit is not None:# TODO fix this better 
+        if num_proteins > 0 and self.total_proteins_hit > 0:
+            percent_hit = float((self.total_proteins_hit/num_proteins)*100.00)
+            if percent_hit is not None:# TODO fix this better
                 output =  ('%.2f' % percent_hit)
                 return output
             else:
@@ -56,15 +56,15 @@ class VParse:
         self.faa_index = None
         self.out_dir = None
         self.index_file = None
-    
+
     def parse_hits_file(self, hits_file, threshold):
         print('Parsing hit file...')
         input_handle = open(hits_file, 'r')
         for hit in input_handle:
             fields = hit.split('\t')
             sseqid = fields[1]
-            evalue = float(fields[6])
-            if evalue <= threshold:
+            bitscore = float(fields[7])
+            if bitscore <= threshold:
                 self.update_hit(sseqid)
         input_handle.close()
         return True
@@ -72,10 +72,10 @@ class VParse:
     def update_hit(self, sseqid):
         fields = sseqid.split('|')
         pid = fields[3]
-        for genome in self.genomes: # TODO ask about optimization 
+        for genome in self.genomes: # TODO ask about optimization
             if pid in genome.protein_list:
                 g_index = genome.protein_list.index(pid)
-                genome.protein_hit_list[g_index] += 1 
+                genome.protein_hit_list[g_index] += 1
                 return True
         return False
 
@@ -83,7 +83,7 @@ class VParse:
         print('Generating genome statistics..')
         for genome in self.genomes:
             genome.generate_stats()
-        return True 
+        return True
 
     def write_out_all_stats(self, stats_dir):
         self.write_out_summary_stats(stats_dir)
@@ -96,23 +96,24 @@ class VParse:
         with open(coverage_file, 'w') as output_handle:
             output_handle.write('Accession Number\t'
                                 'Spp\t'
-                                'Number of Proetins in Genome\t'
+                                'Number of Proteins in Genome\t'
                                 'Number of Hits to Genome\t'
                                 'Percent Proteins Hit\n'
-                                'Number of genomes: %d\n'
+                                'Number of genomes in database: %d\n'
                                 % len(self.genomes)
                                )
             for genome in self.genomes:
-                genome_stats = [genome.genome_acc, 
-                                genome.species,
-                                str(len(genome.protein_list)),
-                                str(genome.total_hits_to_genome),
-                                str(genome.total_percent_hit)
-                               ]
-                output = '\t'.join(genome_stats)
-                output_handle.write(output+'\n')
+                if genome.total_hits_to_genome > 0:
+                    genome_stats = [genome.genome_acc,
+                                    genome.species,
+                                    str(len(genome.protein_list)),
+                                    str(genome.total_hits_to_genome),
+                                    str(genome.total_percent_hit)
+                                   ]
+                    output = '\t'.join(genome_stats)
+                    output_handle.write('%s\n' % output)
 
-        file_name = 'percent_hits_by_protein.csv'
+        file_name = 'hits_by_protein.csv'
         protein_hits_file = os.path.join(stats_dir, file_name)
         with open(protein_hits_file ,'w') as output_handle:
             for genome in self.genomes:
@@ -124,7 +125,8 @@ class VParse:
                             output = '\t'.join([genome.protein_list[i],
                                                 str(genome.protein_hit_list[i])
                                                ])
-                            output_handle.write(output+'\n')
+                            output_handle.write('%s\n' % output)
+
     def parse_index(self, gbk_dir, out_dir):
         print('Parsing GBK directory:', gbk_dir)
         self.gbk_dir = gbk_dir
@@ -188,7 +190,7 @@ if __name__ == '__main__':
     #for g in vp.genomes:
     #    print(g.genome_acc, g.species)
     #    print(g.protein_list)
-   
+
     vp.parse_hits_file(hits_input, .005)
     vp.generate_statistics()
     vp.write_out_summary_statistics(out_dir)
