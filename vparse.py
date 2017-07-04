@@ -210,6 +210,7 @@ if __name__ == '__main__':
     #    print(g.genome_acc, g.species)
     #    print(g.protein_list)
 
-    vp.parse_hits_file(hits_input, .005)
+    vp.parse_hits_file(hits_input, 50)
     vp.generate_statistics()
     vp.write_out_summary_statistics(out_dir)
+    vp.write_out_for_hitviz(out_dir)
