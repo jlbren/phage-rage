@@ -90,6 +90,25 @@ class VParse:
         self.write_out_for_hitviz(stats_dir)
         self.write_out_for_krona(stats_dir)
 
+    def write_out_for_hitviz(self, stats_dir):
+        hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
+        print('Writing out for HitViz to:', hitviz_file)
+        with open(hitviz_file, 'w') as output_handle:
+            for genome in genomes:
+                if genome.total_hits_to_genome > 0:
+                    output_handle.write("%s|%s|\n" %
+                              (genome.genome_acc,
+                               genome.species
+                              )
+                            )
+                    for i in range(len(genome.protein_list)):
+                        output_handle.wrtie('%s|%s|\n' %
+                                (genome.protein_list[i],
+                                 genome.protein_hit_list[i]
+                                )
+                               )
+                    output_handle.write('*\n')
+
     def write_out_summary_statistics(self, stats_dir):
         print('Writing out summary statistics...')
         coverage_file = os.path.join(stats_dir, 'coverage.csv')
@@ -119,7 +138,7 @@ class VParse:
             for genome in self.genomes:
                 if genome.total_hits_to_genome > 0:
                     output = '\t'.join([genome.genome_acc, genome.species])
-                    output_handle.write(output+'\n')
+                    output_handle.write('>%s\n' % output) # TODO confirm this is ok
                     for i in range(len(genome.protein_list)):
                         if genome.protein_hit_list[i] > 0:
                             output = '\t'.join([genome.protein_list[i],
@@ -148,7 +167,7 @@ class VParse:
                 for feature in record.features:
                     if (feature.type == "CDS"
                          and 'translation' in feature.qualifiers): # kill pseudo genes
-                        assert len(feature.qualifiers['translation']) == 1 # TODO ask about this
+                        assert len(feature.qualifiers['translation']) == 1
                         protein_list.append(feature.qualifiers['protein_id'][0])
                         out_string = ('>%s|ref|%s|%s\n%s\n' %
                             (feature.qualifiers['db_xref'][0].replace(':', '|'),
@@ -157,7 +176,7 @@ class VParse:
                              feature.qualifiers['translation'][0]
                             ))
                         output = out_string.replace(' ', '_')
-                        output_handle.write(output) # TODO ask if this is good
+                        output_handle.write(output) # TODO add record.name to output field for optimization
                 organism.set_proteins(protein_list)
                 self.genomes.append(organism)
                 g = self.genomes[0]
