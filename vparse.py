@@ -94,7 +94,7 @@ class VParse:
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
         print('Writing out for HitViz to:', hitviz_file)
         with open(hitviz_file, 'w') as output_handle:
-            for genome in genomes:
+            for genome in self.genomes:
                 if genome.total_hits_to_genome > 0:
                     output_handle.write("%s|%s|\n" %
                               (genome.genome_acc,
