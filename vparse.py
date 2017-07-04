@@ -102,11 +102,12 @@ class VParse:
                               )
                             )
                     for i in range(len(genome.protein_list)):
-                        output_handle.wrtie('%s|%s|\n' %
-                                (genome.protein_list[i],
-                                 genome.protein_hit_list[i]
-                                )
-                               )
+                        if genome.protein_hit_list[i] > 0: # TODO ask about no hits
+                            output_handle.write('%s|%s|\n' %
+                                    (genome.protein_list[i],
+                                     genome.protein_hit_list[i]
+                                    )
+                                   )
                     output_handle.write('*\n')
 
     def write_out_summary_statistics(self, stats_dir):
