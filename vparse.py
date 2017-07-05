@@ -108,8 +108,8 @@ class VParse:
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
         print('Writing out for HitViz to:', hitviz_file)
         with open(hitviz_file, 'w') as output_handle:
-	    for genome in self.genomes:
-	        output_handle.write("%s|%s|\n" %
+            for genome in self.genomes:
+                output_handle.write("%s|%s|\n" %
                                     (genome.genome_acc,
                                      genome.species
                                     )
@@ -121,7 +121,7 @@ class VParse:
                                              genome.protein_hit_list[i]
                                             )
                                            )
-                output_handle.write('*\n')
+        output_handle.write('*\n')
 
     def write_out_summary_statistics(self, stats_dir):
         print('Writing out summary statistics...')
