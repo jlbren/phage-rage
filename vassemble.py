@@ -62,7 +62,7 @@ class VAssemble:
     def _run_sickle(self):
         print('Running sickle...')
         s_type = 'sanger'
-        s_length = '100'
+        s_length = '50'
         foutput = []
         if not self.paired_end_reads:
             fname = 'trimmed-'+os.path.basename(self.finput[0])
@@ -107,7 +107,8 @@ class VAssemble:
                     return [
                             '--pe1-1', self.finput[0],
                             '--pe1-2', self.finput[1],
-                            '--meta'
+                            '--meta', '--only-assembler',
+                            '-k', '33,55,77,99,129'
                            ]
 
                 elif self.assembler == 'megahit':
@@ -145,7 +146,8 @@ class VAssemble:
                         '--pe1-1', trimmed[0],
                         '--pe1-2', trimmed[1],
                         '--pe1-s', os.path.join(self.qc_dir, 'singletons.fastq'),
-                        '--meta'
+                        '--meta', '--only-assembler',
+                        '-k', '33,55,77,99,127'
                        ]
 
             elif self.assembler == 'megahit':

@@ -14,11 +14,11 @@ class VMap:
         self._get_orfs()
         self._run_mapper()
 
-    def _get_orfs(self): # TODO make sure -find is good 
+    def _get_orfs(self): # TODO make sure -find is good
         print('Running getorf...')
         self.orfs = os.path.join(self.map_dir, 'predicted_orfs.faa')
-        print(self.orfs)
-        print(self.finput)
+        #print(self.orfs)
+        #print(self.finput)
         subprocess.check_call(['getorf',
                                '-find', '0', # NOTE 0 is for AA, 2 for NUC
                                '-minsize', '90',
@@ -26,37 +26,38 @@ class VMap:
                                self.orfs
                               ])
     def _run_mapper(self):
-        if self.mapper == 'blast':
-            print("Running blast...")
+        self.hit_file = os.path.join(self.map_dir, 'hits.csv')
+        if self.mapper == 'blastp':
+            print("Running blastp...")
             subprocess.check_call(['blastp',
                                    '-query', self.orfs,
                                    '-db', self.index_dir,
                                    '-max_target_seqs', '1',
                                    '-evalue', '1',
-                                   '-out', self.map_dir+'/blast_out.m8', #TODO is this the output file?
-                                   '-outfmt', 
-                                   '10 qseqid sseqid qstart qend pident length evalue bitscore', 
+                                   '-out', self.hit_file,
+                                   '-outfmt',
+                                   '10 qseqid sseqid qstart qend pident length evalue bitscore',
                                    '-num_threads', self.threads
                                   ])
 
-        elif self.mapper == 'pauda':
+        elif self.mapper == 'pauda': # TODO This
             print('Running pauda...')
             subprocess.check_call(['pauda-run',
-                                   self.orfs, 
+                                   self.orfs,
                                    self.map_dir,
                                    self.index_dir,
                                   ])
 
 
-        elif self.mapper == 'lambda': # TODO multithreads?
+        elif self.mapper == 'lambda':
             print('Running lambda...')
-            subprocess.check_call(['lambda', 
+            subprocess.check_call(['lambda',
                                    '-p', 'blastp',
                                    '-q', self.orfs,
                                    '-i', self.index_dir,
                                    '-t', self.threads,
-                                   '-o', self.map_dir + '/lambda_out.m8', # TODO make these output file names unified
-                                   '--output-columns', 
+                                   '-o', self.hit_file,
+                                   '--output-columns',
                                    'qseqid sseqid qstart qend pident length evalue bitscore'
                                   ])
 
@@ -65,7 +66,7 @@ class VMap:
                                    '-d', self.index_dir,
                                    '--threads', self.threads,
                                    '-q', self.orfs,
-                                   '-o', self.map_dir+'/diamond_out.csv',
+                                   '-o', self.hit_file,
                                    '--outfmt',
                                    '6', 'qseqid', 'sseqid', 'qstart', 'qend', 'pident',
 				   'length', 'evalue', 'bitscore'
@@ -97,7 +98,7 @@ class VMap:
                                    '-i', self.index_dir
                                   ])
 
-        elif self.mapper == 'blast':
+        elif self.mapper == 'blastp':
             subprocess.check_call(['makeblastdb',
                                    '-in', index_input,
                                    '-dbtype', 'prot',

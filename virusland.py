@@ -31,3 +31,7 @@ vmapper = vmap.VMap(contigs,
                     vconf.args.threads)
 vmapper.build_index(vparser.index_file)
 vmapper.run_map()
+
+vparser.parse_hits_file(vmapper.hits_file, 50) # TODO make bitscore arg w default 50
+vparser.generate_statistics()
+vparser.write_out_all_stats(vconf.out_dirs['stats'])
