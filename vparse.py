@@ -110,19 +110,19 @@ class VParse:
         print('Writing out for HitViz to:', hitviz_file)
         with open(hitviz_file, 'w') as output_handle:
             for genome in self.genomes:
-                if self.genome.total_hits_to_genome > 0:
+                if genome.total_hits_to_genome > 0:
                     output_handle.write("%s|%s|\n" %
                                     (genome.genome_acc,
                                      genome.species
                                     )
                                    )
-                for i in range(len(genome.protein_list)):
-                        output_handle.write('%s|%d|\n' %
+                    for i in range(len(genome.protein_list)):
+                            output_handle.write('%s|%d|\n' %
                                             (genome.protein_list[i],
                                              genome.protein_hit_list[i]
                                             )
                                            )
-            output_handle.write('*\n')
+                    output_handle.write('*\n')
 
     def write_out_summary_statistics(self, stats_dir):
         print('Writing out summary statistics...')
@@ -153,7 +153,7 @@ class VParse:
             for genome in self.genomes:
                 if genome.total_hits_to_genome > 0:
                     output = '\t'.join([genome.genome_acc, genome.species])
-                    output_handle.write('>%s\n' % output) # TODO confirm this is ok
+                    output_handle.write('>%s\n' % output) # TODO confirm > is ok
                     for i in range(len(genome.protein_list)):
                         if genome.protein_hit_list[i] > 0:
                             output = '\t'.join([genome.protein_list[i],
