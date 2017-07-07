@@ -83,7 +83,7 @@ class VParse:
         print('Generating genome statistics..')
         for genome in self.genomes:
             genome.generate_stats()
-        genomes.sort(key = lambda species: genome.species)
+        self.genomes.sort(key = lambda species: genome.species)
         return True
 
     def write_out_all_stats(self, stats_dir):
