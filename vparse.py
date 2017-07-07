@@ -83,6 +83,7 @@ class VParse:
         print('Generating genome statistics..')
         for genome in self.genomes:
             genome.generate_stats()
+        genomes.sort(key = lambda species: genome.species)
         return True
 
     def write_out_all_stats(self, stats_dir):
@@ -109,19 +110,19 @@ class VParse:
         print('Writing out for HitViz to:', hitviz_file)
         with open(hitviz_file, 'w') as output_handle:
             for genome in self.genomes:
-                output_handle.write("%s|%s|\n" %
+                if self.genome.total_hits_to_genome > 0:
+                    output_handle.write("%s|%s|\n" %
                                     (genome.genome_acc,
                                      genome.species
                                     )
                                    )
                 for i in range(len(genome.protein_list)):
-                    if genome.protein_hit_list[i] > 0: # TODO ask about no hits
                         output_handle.write('%s|%d|\n' %
                                             (genome.protein_list[i],
                                              genome.protein_hit_list[i]
                                             )
                                            )
-        output_handle.write('*\n')
+            output_handle.write('*\n')
 
     def write_out_summary_statistics(self, stats_dir):
         print('Writing out summary statistics...')
