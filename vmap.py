@@ -1,6 +1,7 @@
 import subprocess
 import sys
-import os
+import osi
+import shutil
 from glob import glob
 
 class VMap:
@@ -50,16 +51,19 @@ class VMap:
 
 
         elif self.mapper == 'lambda':
+            output_fields = 'qseqid sseqid qstart qend pident length evalue bitscore'
+            tmp_file = os.path.join(self.map_dir, 'hits.m8')
             print('Running lambda...')
             subprocess.check_call(['lambda',
                                    '-p', 'blastp',
                                    '-q', self.orfs,
                                    '-i', self.index_dir,
                                    '-t', self.threads,
-                                   '-o', self.hit_file,
+                                   '-o', tmp_file,
                                    '--output-columns',
-                                   'qseqid sseqid qstart qend pident length evalue bitscore'
+                                   output_fields
                                   ])
+            shutil.move(temp_file, self.hit_file)
 
         elif self.mapper == 'diamond':
             subprocess.check_call(['diamond', 'blastp',
