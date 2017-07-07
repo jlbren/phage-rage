@@ -1,6 +1,6 @@
 import subprocess
 import sys
-import osi
+import os
 import shutil
 from glob import glob
 
