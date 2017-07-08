@@ -27,7 +27,7 @@ class VSetup:
         # Mapper type
         parser.add_argument('-m', '--mapper', required=True,
                             choices=[
-                                'blast',
+                                'blastp',
                                 'pauda',
                                 'lambda',
                                 'diamond'
