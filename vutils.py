@@ -14,6 +14,15 @@ class VSetup:
         self.out_dirs = self._create_output_dirs()
 
     def _varg_parse(self):
+      """Parse user input for needed pipeline parameters.
+      Input Files: 2 PE, 1 SE, or 1 pre-assumbled contigs
+      Mapper Type: blast, pauda, lambda, diamond
+      Assembler Type: spades, velvet, megahit
+      Read Type: Single, Paired End
+      Number of Threads
+      Output Directory
+      Read QC Flag
+      """
         parser = argparse.ArgumentParser(description="VLand 2: PHAGE RAGE",
                                          prog="virusland")
         # Input files: 2 PE, 1 SE, or 1 pre-assumbled contigs
@@ -75,6 +84,7 @@ class VSetup:
         return parser
 
     def _check_parser(self):
+        """Tests for varg_parse"""
         # Check input type flags
         if sum([self.args.assembled_contigs,
                     self.args.paired_end_reads, self.args.single_reads]) != 1:
@@ -107,6 +117,8 @@ class VSetup:
                   file=sys.stderr)
 
     def _create_output_dirs(self):
+      """Check for output directory and attempt to create it if it does not exist"""
+
         if self.args.output != os.getcwd():
             self.args.output = os.path.join(os.getcwd(), self.args.output)
         out_path = self.args.output
@@ -146,6 +158,7 @@ class VSetup:
                                   'Please specify an unused output directory.')
 
     def check_dependencies(self):
+      """Virusland Dependency Check"""
         depend_list = []
         if self.args.assembled_contigs is False:
             depend_list.append(self.args.assembler)
@@ -162,6 +175,7 @@ class VSetup:
 
 
 def copy_and_remove(src, dest):
+  """Move files to new location"""
     for f in glob(os.path.join(src,'*')):
         shutil.move(f, dest)
     shutil.rmtree(src)
