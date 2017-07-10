@@ -24,11 +24,16 @@ class VAssemble:
         self._run_assembler(asm_input)
 
     def _run_assembler(self, asm_input):
+      """Run Chosen Assembler
+      Spades
+      Velvet
+      Megahit
+      """
         if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
             p = subprocess.check_call(['spades.py',
                                        '--threads', self.threads,
-				       '-o', self.asm_dir]
+               '-o', self.asm_dir]
                                       + asm_input)
             self.contigs = os.path.join(self.asm_dir, 'contigs.fasta')
 
@@ -51,7 +56,7 @@ class VAssemble:
                                        '-t', self.threads,
                                        '-o', temp_out
                                       ]
-				      + asm_input)
+              + asm_input)
 
             vutils.copy_and_remove(temp_out, self.asm_dir)
             self.contigs = os.path.join(self.asm_dir, 'final.contigs.fa')
@@ -60,6 +65,7 @@ class VAssemble:
             pass # TODO Same problem w default cases that shouldnt happen
 
     def _run_sickle(self):
+      """Sickle"""
         print('Running sickle...')
         s_type = 'sanger'
         s_length = '50'
@@ -96,6 +102,7 @@ class VAssemble:
         return p
 
     def _to_formatted_input(self):
+      """Correctly format input for pipeline"""
         if self.qc is True:
             return self._get_trimmed_input()
         else:
@@ -118,8 +125,7 @@ class VAssemble:
                            ]
 
                 else:
-                    pass # TODO it should never get to this from args checking,
-                         # but add error throw for completeness
+                    raise ValueError('Should Never Throw')
 
             else: # Else if single_end_reads
                 if self.assembler == 'velvet':
@@ -132,7 +138,7 @@ class VAssemble:
                     return ['-r', self.finput[0]]
 
                 else:
-                    pass # TODO see above todo
+                    raise ValueError('Should Never Throw')
 
 
     def _get_trimmed_input(self):
@@ -157,8 +163,7 @@ class VAssemble:
                        ]
 
             else:
-                pass # TODO it should never get to this from args checking,
-                     # but add error throw for completeness
+                raise ValueError('Should Never Throw')
 
         else: # Else if single_end_reads
             if self.assembler == 'velvet':
@@ -171,5 +176,4 @@ class VAssemble:
                 return ['-r', trimmed[0]]
 
             else:
-                pass # TODO see above todo
-
+                raise ValueError('Should Never Throw')

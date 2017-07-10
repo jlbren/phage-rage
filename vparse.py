@@ -26,6 +26,7 @@ class Genome:
         return total_hit
 
     def generate_stats(self):
+        """Generate protein hits, number of hits to genome, and percentage of proteins hit"""
         self.total_proteins_hit = self.get_number_of_proteins_with_hits()
         self.total_hits_to_genome = self.get_number_of_hits_to_genome()
         percent_hit = self.get_percentage_of_proteins_hit()
@@ -33,7 +34,9 @@ class Genome:
             percent_hit == '0'
         else:
             self.total_percent_hit = percent_hit
+    
     def get_percentage_of_proteins_hit(self):
+        """Calculate percentage of proteins hit"""
         if self.total_proteins_hit == 0:
             self.total_proteins_hit = self.get_number_of_proteins_with_hits()
         num_proteins = len(self.protein_list)
@@ -46,6 +49,7 @@ class Genome:
                 return '0'
 
     def get_number_of_hits_to_genome(self):
+        """Return number of hits to genome"""
         return sum(self.protein_hit_list)
 
 class VParse:
@@ -58,6 +62,7 @@ class VParse:
         self.index_file = None
 
     def parse_hits_file(self, hits_file, threshold):
+        """Parse hits file, updating if above target threshold"""
         print('Parsing hit file...')
         input_handle = open(hits_file, 'r')
         for hit in input_handle:
@@ -70,6 +75,7 @@ class VParse:
         return True
 
     def update_hit(self, sseqid):
+        """Update Hit Function"""
         fields = sseqid.split('|')
         pid = fields[3]
         for genome in self.genomes: # TODO ask about optimization
@@ -80,6 +86,7 @@ class VParse:
         return False
 
     def generate_statistics(self):
+        """Generate Genome Statistics"""
         print('Generating genome statistics..')
         for genome in self.genomes:
             genome.generate_stats()
@@ -87,11 +94,17 @@ class VParse:
         return True
 
     def write_out_all_stats(self, stats_dir):
+        """Write out all stats:
+        Summary Statistics
+        HitViz Output
+        Krona Output
+        """
         self.write_out_summary_statistics(stats_dir)
         self.write_out_for_hitviz(stats_dir)
         self.write_out_for_krona(stats_dir)
 
     def write_out_for_krona(self, stats_dir):
+        """Write out Krona File"""
         krona_file = os.path.join(stats_dir, 'krona_stats.csv')
         print('Writing out for Krona to:', krona_file)
         with open(krona_file, 'w') as output_handle:
@@ -106,6 +119,7 @@ class VParse:
                            )
 
     def write_out_for_hitviz(self, stats_dir):
+        """Write out hitviz file"""
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
         print('Writing out for HitViz to:', hitviz_file)
         with open(hitviz_file, 'w') as output_handle:
@@ -125,6 +139,14 @@ class VParse:
                     output_handle.write('*\n')
 
     def write_out_summary_statistics(self, stats_dir):
+        """Write out Summary Statistics
+        Accession Number
+        SPP
+        Number of Proteins in Genome
+        Number of Hits in Genome
+        Percent of Proteins Hit
+        Number of Genomes in Database
+        """
         print('Writing out summary statistics...')
         coverage_file = os.path.join(stats_dir, 'coverage.csv')
         with open(coverage_file, 'w') as output_handle:
@@ -162,6 +184,7 @@ class VParse:
                             output_handle.write('%s\n' % output)
 
     def parse_index(self, gbk_dir, out_dir):
+        """Parse GBK index"""
         print('Parsing GBK directory:', gbk_dir)
         self.gbk_dir = gbk_dir
         self.out_dir = out_dir
@@ -200,6 +223,7 @@ class VParse:
         return index_file
 
     def parse_gbk_dir(self, gbk_dir):
+        """Check for gbk files in folder and parse"""
         gbk_files = []
         for gbk_file in glob(os.path.join(gbk_dir, '*.gbk')):
             gbk_files.append(gbk_file)
