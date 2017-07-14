@@ -1,8 +1,7 @@
 import subprocess
-import sys
 import os
 from glob import glob
-import shutil
+import vutils
 
 class VAssemble:
     def __init__(self, finput, paired_end_reads, threads):
@@ -11,38 +10,56 @@ class VAssemble:
         self.threads = str(threads)
         self.qc = False
         self.contigs = None
+        self.qc_dir = None
+        self.assembler = None
+        self.asm_dir = None
+
+    def start_logger(self, log_dir):
+        self._logger = vutils.Logger('vassemble', log_dir)
+
     def run_qc(self, qc_dir):
+      '''Run Sickle'''
         self.qc_dir = qc_dir
+        self.logger.log('run_qc', 'Running sickle.\n'
+                        'Output in: %s' % self.qc_dir
+                       )
         self._run_sickle()
         self.qc = True
         # TODO implement logging
 
     def run_assembly(self, assembler, asm_dir):
+      '''Run chosen assembler'''
         self.assembler = assembler
         self.asm_dir = asm_dir
-        asm_input = self._to_formatted_input()
-        self._run_assembler(asm_input)
+        formatted_input = self._to_formatted_input()
+        self._logger.log('run_assembly', 'Starting assembler: %s' % assembler)
+        self._run_assembler(formatted_input)
+        self._logger.log('run_assembly', 'Finished assembly.\n'
+                         'Output: %s' % self.contigs
+                        )
 
-    def _run_assembler(self, asm_input):
-      """Run Chosen Assembler
-      Spades
-      Velvet
-      Megahit
-      """
+    def _run_assembler(self, formatted_input):
+      '''Choose Assembler and Run:
+      spades
+      velvet
+      megahit
+      '''
         if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
             p = subprocess.check_call(['spades.py',
                                        '--threads', self.threads,
-               '-o', self.asm_dir]
-                                      + asm_input)
+				                       '-o', self.asm_dir
+                                      ]
+                                      + formatted_input)
             self.contigs = os.path.join(self.asm_dir, 'contigs.fasta')
+
 
         elif self.assembler == 'velvet':
             print('Running velevth...')
             p = subprocess.check_call(['velveth', self.asm_dir,
                                        '31', '-fastq', '-shortPaired'
                                       ]
-                                      + asm_input)
+                                      + formatted_input)
             print('Running velvetg...')
             p = subprocess.check_call(['velvetg', self.asm_dir,
                                        '-exp_cov', 'auto'
@@ -56,7 +73,7 @@ class VAssemble:
                                        '-t', self.threads,
                                        '-o', temp_out
                                       ]
-              + asm_input)
+				                      + formatted_input)
 
             vutils.copy_and_remove(temp_out, self.asm_dir)
             self.contigs = os.path.join(self.asm_dir, 'final.contigs.fa')
@@ -65,7 +82,7 @@ class VAssemble:
             pass # TODO Same problem w default cases that shouldnt happen
 
     def _run_sickle(self):
-      """Sickle"""
+      '''Run Sickle'''
         print('Running sickle...')
         s_type = 'sanger'
         s_length = '50'
@@ -102,7 +119,7 @@ class VAssemble:
         return p
 
     def _to_formatted_input(self):
-      """Correctly format input for pipeline"""
+      '''Set up reads input for assemblers'''
         if self.qc is True:
             return self._get_trimmed_input()
         else:
@@ -125,7 +142,8 @@ class VAssemble:
                            ]
 
                 else:
-                    raise ValueError('Should Never Throw')
+                    pass # TODO it should never get to this from args checking,
+                         # but add error throw for completeness
 
             else: # Else if single_end_reads
                 if self.assembler == 'velvet':
@@ -138,10 +156,11 @@ class VAssemble:
                     return ['-r', self.finput[0]]
 
                 else:
-                    raise ValueError('Should Never Throw')
+                    pass # TODO see above todo
 
 
     def _get_trimmed_input(self):
+      '''Trim reads to be used as input'''
         trimmed = glob(os.path.join(self.qc_dir, 'trimmed*'))
         if self.paired_end_reads is True:
             if self.assembler == 'velvet':
@@ -163,7 +182,8 @@ class VAssemble:
                        ]
 
             else:
-                raise ValueError('Should Never Throw')
+                pass # TODO it should never get to this from args checking,
+                     # but add error throw for completeness
 
         else: # Else if single_end_reads
             if self.assembler == 'velvet':
@@ -176,4 +196,5 @@ class VAssemble:
                 return ['-r', trimmed[0]]
 
             else:
-                raise ValueError('Should Never Throw')
+                pass # TODO see above todo
+
