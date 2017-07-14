@@ -1,8 +1,7 @@
 import subprocess
-import sys
 import os
 from glob import glob
-import shutil
+import vutils
 
 class VAssemble:
     def __init__(self, finput, paired_end_reads, threads):
@@ -11,8 +10,18 @@ class VAssemble:
         self.threads = str(threads)
         self.qc = False
         self.contigs = None
+        self.qc_dir = None
+        self.assembler = None
+        self.asm_dir = None
+
+    def start_logger(self, log_dir):
+        self._logger = vutils.Logger('vassemble', log_dir)
+
     def run_qc(self, qc_dir):
         self.qc_dir = qc_dir
+        self.logger.log('run_qc', 'Running sickle.\n'
+                        'Output in: %s' % self.qc_dir
+                       )
         self._run_sickle()
         self.qc = True
         # TODO implement logging
@@ -20,24 +29,30 @@ class VAssemble:
     def run_assembly(self, assembler, asm_dir):
         self.assembler = assembler
         self.asm_dir = asm_dir
-        asm_input = self._to_formatted_input()
-        self._run_assembler(asm_input)
+        formatted_input = self._to_formatted_input()
+        self._logger.log('run_assembly', 'Starting assembler: %s' % assembler)
+        self._run_assembler(formatted_input)
+        self._logger.log('run_assembly', 'Finished assembly.\n'
+                         'Output: %s' % self.contigs
+                        )
 
-    def _run_assembler(self, asm_input):
+    def _run_assembler(self, formatted_input):
         if self.assembler == 'spades': # TODO check if this how u call spades
             print('Running spades..')
             p = subprocess.check_call(['spades.py',
                                        '--threads', self.threads,
-				       '-o', self.asm_dir]
-                                      + asm_input)
+				                       '-o', self.asm_dir
+                                      ]
+                                      + formatted_input)
             self.contigs = os.path.join(self.asm_dir, 'contigs.fasta')
+
 
         elif self.assembler == 'velvet':
             print('Running velevth...')
             p = subprocess.check_call(['velveth', self.asm_dir,
                                        '31', '-fastq', '-shortPaired'
                                       ]
-                                      + asm_input)
+                                      + formatted_input)
             print('Running velvetg...')
             p = subprocess.check_call(['velvetg', self.asm_dir,
                                        '-exp_cov', 'auto'
@@ -51,7 +66,7 @@ class VAssemble:
                                        '-t', self.threads,
                                        '-o', temp_out
                                       ]
-				      + asm_input)
+				                      + formatted_input)
 
             vutils.copy_and_remove(temp_out, self.asm_dir)
             self.contigs = os.path.join(self.asm_dir, 'final.contigs.fa')

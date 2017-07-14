@@ -2,6 +2,8 @@ from glob import glob
 from Bio import SeqIO
 import os
 import sys
+import subprocess
+import vutils
 
 class Genome:
     def __init__(self, g_acc, species, tax):
@@ -40,7 +42,7 @@ class Genome:
         if num_proteins > 0 and self.total_proteins_hit > 0:
             percent_hit = float((self.total_proteins_hit/num_proteins)*100.00)
             if percent_hit is not None:# TODO fix this better
-                output =  ('%.2f' % percent_hit)
+                output = ('%.2f' % percent_hit)
                 return output
             else:
                 return '0'
@@ -57,8 +59,73 @@ class VParse:
         self.out_dir = None
         self.index_file = None
 
+    def start_logger(self, log_dir):
+        self._logger = vutils.Logger('vparse', log_dir)
+
+    def parse_index(self, gbk_dir, out_dir):
+        print('Parsing GBK directory:', gbk_dir)
+        self.gbk_dir = gbk_dir
+        self.out_dir = out_dir
+        self._logger.log('parse_index', 'Starting to parse GBK dir: %s' % self.gbk_dir)
+        self.gbk_files = self.parse_gbk_dir(gbk_dir)
+        self.index_file = self.parse_gbk_files(self.gbk_files, self.out_dir)
+        self._logger.log('parse_index', 'Finished parsing GBK directory.\n'
+                         'FAA output: %s\n Total number of genomes: %d'
+                         % (self.index_file, len(self.genomes))
+                        )
+
+    def parse_gbk_files(self, gbk_file_list, out_dir):
+        index_file = os.path.join(out_dir, 'index.faa')
+        output_handle = open(index_file, 'w')
+        for f in gbk_file_list:
+            input_handle = open(f, 'r')
+            for record in SeqIO.parse(input_handle, 'genbank'):
+                organism = Genome(record.name,
+                                  record.annotations['organism'],
+                                  record.annotations['taxonomy']
+                                  )
+                protein_list = []
+                for feature in record.features:
+                    if (feature.type == "CDS"
+                        and 'translation' in feature.qualifiers):  # kill pseudo genes
+                        assert len(feature.qualifiers['translation']) == 1
+                        protein_list.append(feature.qualifiers['protein_id'][0])
+                        out_string = ('>%s|ref|%s|%s\n%s\n' %
+                                      (feature.qualifiers['db_xref'][0].replace(':', '|'),
+                                       feature.qualifiers['protein_id'][0],
+                                       feature.qualifiers['product'][0],
+                                       feature.qualifiers['translation'][0]
+                                       ))
+                        output = out_string.replace(' ', '_')
+                        output_handle.write(output)  # TODO add record.name to output field for optimization
+                organism.set_proteins(protein_list)
+                self.genomes.append(organism)
+                g = self.genomes[0]
+            input_handle.close()
+        output_handle.close()
+        return index_file
+
+    def parse_gbk_dir(self, gbk_dir):
+        gbk_files = []
+        for gbk_file in glob(os.path.join(gbk_dir, '*.gbk')):
+            gbk_files.append(gbk_file)
+        sub_dirs = glob(os.path.join(gbk_dir, '*'))
+        for f in sub_dirs:
+            if os.path.isdir(f):
+                for gbk_file in glob(os.path.join(f, '*.gbk')):
+                    gbk_files.append(gbk_file)
+
+        if not gbk_files:
+            raise ValueError('Improperly formatted index folder.\n'
+                             'No GBK files found in: %s'
+                             % gbk_dir)
+        return gbk_files
+
     def parse_hits_file(self, hits_file, threshold):
         print('Parsing hit file...')
+        self._logger.log('parse_hits_file', 'Parsing hit file: '
+                                            % hits_file
+                        )
         input_handle = open(hits_file, 'r')
         for hit in input_handle:
             fields = hit.split('\t')
@@ -87,6 +154,9 @@ class VParse:
         return True
 
     def write_out_all_stats(self, stats_dir):
+        self._logger.log('write_out_all_stats', 'Writting out stats files.\n'
+                                                'Output directory: %s' % stats_dir
+                        )
         self.write_out_summary_statistics(stats_dir)
         self.write_out_for_hitviz(stats_dir)
         self.write_out_for_krona(stats_dir)
@@ -104,6 +174,7 @@ class VParse:
                              genome.species
                             )
                            )
+        subprocess.check_call(['ktImportText', krona_file])
 
     def write_out_for_hitviz(self, stats_dir):
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
@@ -161,59 +232,7 @@ class VParse:
                                                ])
                             output_handle.write('%s\n' % output)
 
-    def parse_index(self, gbk_dir, out_dir):
-        print('Parsing GBK directory:', gbk_dir)
-        self.gbk_dir = gbk_dir
-        self.out_dir = out_dir
-        self.gbk_files = self.parse_gbk_dir(gbk_dir)
-        self.index_file = self.parse_gbk_files(self.gbk_files, self.out_dir)
 
-    def parse_gbk_files(self, gbk_file_list, out_dir):
-        index_file = os.path.join(out_dir,'index.faa')
-        output_handle = open(index_file, 'w')
-        for f in gbk_file_list:
-            input_handle = open(f, 'r')
-            for record in SeqIO.parse(input_handle, 'genbank'):
-                organism = Genome(record.name,
-                                  record.annotations['organism'],
-                                  record.annotations['taxonomy']
-                                 )
-                protein_list = []
-                for feature in record.features:
-                    if (feature.type == "CDS"
-                         and 'translation' in feature.qualifiers): # kill pseudo genes
-                        assert len(feature.qualifiers['translation']) == 1
-                        protein_list.append(feature.qualifiers['protein_id'][0])
-                        out_string = ('>%s|ref|%s|%s\n%s\n' %
-                            (feature.qualifiers['db_xref'][0].replace(':', '|'),
-                             feature.qualifiers['protein_id'][0],
-                             feature.qualifiers['product'][0],
-                             feature.qualifiers['translation'][0]
-                            ))
-                        output = out_string.replace(' ', '_')
-                        output_handle.write(output) # TODO add record.name to output field for optimization
-                organism.set_proteins(protein_list)
-                self.genomes.append(organism)
-                g = self.genomes[0]
-            input_handle.close()
-        output_handle.close()
-        return index_file
-
-    def parse_gbk_dir(self, gbk_dir):
-        gbk_files = []
-        for gbk_file in glob(os.path.join(gbk_dir, '*.gbk')):
-            gbk_files.append(gbk_file)
-        sub_dirs = glob(os.path.join(gbk_dir, '*'))
-        for f in sub_dirs:
-            if os.path.isdir(f):
-                for gbk_file in glob(os.path.join(f,'*.gbk')):
-                    gbk_files.append(gbk_file)
-
-        if not gbk_files:
-            raise ValueError('Improperly formatted index folder.\n'
-                             'No GBK files found in: %s'
-                             % gbk_dir)
-        return gbk_files
 # TEST
 if __name__ == '__main__':
     gbk_input = sys.argv[1]
