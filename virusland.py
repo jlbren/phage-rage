@@ -13,13 +13,13 @@ vlog = vutils.Logger('virusland', vconf.out_dirs['logs'])
 start_msg = ('Starting virusland pipeline.\nConfiguration:\n'
              + '\tInput: ' + ' '.join(vconf.args.finput) + '\n'
              + '\tInput type: ' + vconf.input_type + '\n'
-             + '\tAssembler: ' + vconf.args.assembler + '\n'
-             + '\tQuality control: ' + vconf.args.quality_control + '\n'
+             + '\tAssembler: ' + str(vconf.args.assembler) + '\n'
+             + '\tQuality control: ' + str(vconf.args.quality_control) + '\n'
              + '\tMapper: ' + vconf.args.mapper + '\n'
-             + '\tThreshold: ' + vconf.args.threshold + '\n'
-             + '\tThreads: ' + vconf.args.threads + '\n'
-             + '\tIndex directory: ' + vconf.args.index + '\n'
-             + '\tOutput directory: ' + vconf.args.output
+             + '\tThreshold: ' + str(vconf.args.threshold) + '\n'
+             + '\tThreads: ' + str(vconf.args.threads) + '\n'
+             + '\tIndex directory: ' + str(vconf.args.index) + '\n'
+             + '\tOutput directory: ' + str(vconf.args.output)
             )
 vlog.log('main', start_msg)
 

@@ -78,7 +78,7 @@ class VSetup:
                              help='Bitscore threshold for parsing mapper hits.')
 
         # Output base directory.
-        parser.add_argument('-o', '--output', default=os.getcwd(),
+        parser.add_argument('-o', '--output', type=str, default=os.getcwd(),
                             help='Base output directory path.\n'
                             'All output will be located here.\n'
                             'Must be relative to current working directory.')
@@ -213,7 +213,7 @@ class Logger:
     def log(self, method, msg):
         time = self.get_time()
         with open(self.log_file, 'a+') as output_handle:
-            output_handle.write('[%s][%s][%s]\n' % time, self.module, method)
+            output_handle.write('[%s][%s][%s]\n' % (time, self.module, method))
             output_handle.write('%s\n' % msg)
 
 if __name__ == '__main__':

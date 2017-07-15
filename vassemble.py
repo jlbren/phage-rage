@@ -19,7 +19,7 @@ class VAssemble:
 
     def run_qc(self, qc_dir):
         self.qc_dir = qc_dir
-        self.logger.log('run_qc', 'Running sickle.\n'
+        self._logger.log('run_qc', 'Running sickle.\n'
                         'Output in: %s' % self.qc_dir
                        )
         self._run_sickle()

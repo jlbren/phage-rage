@@ -123,7 +123,7 @@ class VParse:
 
     def parse_hits_file(self, hits_file, threshold):
         print('Parsing hit file...')
-        self._logger.log('parse_hits_file', 'Parsing hit file: '
+        self._logger.log('parse_hits_file', 'Parsing hit file: %s'
                                             % hits_file
                         )
         input_handle = open(hits_file, 'r')
