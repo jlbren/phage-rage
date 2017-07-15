@@ -70,7 +70,7 @@ class VParse:
         self.gbk_files = self.parse_gbk_dir(gbk_dir)
         self.index_file = self.parse_gbk_files(self.gbk_files, self.out_dir)
         self._logger.log('parse_index', 'Finished parsing GBK directory.\n'
-                         'FAA output: %s\n Total number of genomes: %d'
+                         'FAA output: %s\nTotal number of genomes: %d'
                          % (self.index_file, len(self.genomes))
                         )
 

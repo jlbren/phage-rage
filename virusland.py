@@ -59,4 +59,5 @@ vparser.generate_statistics()
 vparser.write_out_all_stats(vconf.out_dirs['stats'])
 
 # Goodbye
-vlog.log('main', 'Virusland pipeline finished.\n Thank you for using this program. Goodbye!')
+vlog.log('main', 'Virusland pipeline finished.\n'
+                 'Thank you for using this program. Goodbye!')
