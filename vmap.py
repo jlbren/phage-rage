@@ -48,7 +48,7 @@ class VMap:
                                    '-evalue', '1',
                                    '-out', self.hits_file,
                                    '-outfmt',
-                                   '10 qseqid sseqid qstart qend pident length evalue bitscore',
+                                   '6 qseqid sseqid qstart qend pident length evalue bitscore',
                                    '-num_threads', self.threads
                                   ])
 
