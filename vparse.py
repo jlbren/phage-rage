@@ -174,7 +174,10 @@ class VParse:
                              genome.species
                             )
                            )
-        subprocess.check_call(['ktImportText', krona_file])
+        krona_graph = os.path.join(stats_dir, 'krona_graph.html')
+        subprocess.check_call(['ktImportText', krona_file,
+                               '-o', krona_graph
+                              ])
 
     def write_out_for_hitviz(self, stats_dir):
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
