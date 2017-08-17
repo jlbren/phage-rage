@@ -222,7 +222,7 @@ class VSetup:
             if name == 'spades':
                 return ['spades.py']
             elif name == 'velvet':
-                return['velvelth', 'velvetg']
+                return['velveth', 'velvetg']
             elif name == 'megahit':
                 return ['megahit']
         elif cat  == 'mapper':
