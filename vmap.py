@@ -61,7 +61,7 @@ class VMap:
                                    '-q', self.orfs,
                                    '-i', self.index_dir,
                                    '-t', self.threads,
-                                   '-o', tmp_file,
+                                   '-o', temp_file,
                                    '--output-columns',
                                    output_fields
                                   ])
