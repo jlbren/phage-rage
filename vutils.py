@@ -7,6 +7,17 @@ from glob import glob
 from datetime import datetime
 
 class VSetup:
+    """Class used to parse program arguments
+       Attributes:
+            argv_ (list): list of passed command line args 
+            _parser (ArgParser): ArgParser object used to parse argv_
+            args (object): object created by ArgParser with each arg as an 
+                           attribute 
+            out_dirs (dict): dictionary containing path to each output directory
+            input_type (string): parsed input type (SE, PE, contigs)
+       Arguments:
+            argv_ (list): sys.argv[1:] passed from the main script
+    """
     def __init__(self, argv_):
         self.argv_ = argv_
         self._parser = self._varg_parse()
@@ -14,8 +25,12 @@ class VSetup:
         self._check_parser()
         self.out_dirs = self._create_output_dirs()
         self.input_type = self._get_input_type()
-
+    
     def _varg_parse(self):
+        """Method that defines rules for the self._parser ArgumentParser object
+           Returns:
+                parser (ArgumentParser): initialized ArgumentParser object 
+        """
         parser = argparse.ArgumentParser(description="VLand 2: PHAGE RAGE",
                                          prog="virusland")
         # Input files: 2 PE, 1 SE, or 1 pre-assembled contigs
@@ -86,6 +101,13 @@ class VSetup:
         return parser
 
     def _check_parser(self):
+        """Method that checks based arguments for logic 
+           not implicitly handled by the parser.
+           
+           Raises:
+                ParserError: ArgumentParser error if args are incorrect. 
+        """
+
         # Check input type flags
         if sum([self.args.assembled_contigs,
                     self.args.paired_end_reads, self.args.single_reads]) != 1:
@@ -120,6 +142,10 @@ class VSetup:
                   'See help for options to change thread count.')
 
     def _get_input_type(self):
+        """Determines input type based on passed arguments. 
+           Returns: 
+                (str): corresponding string for each input type. 
+        """
         if self.args.assembled_contigs:
             return 'assembled contigs'
         elif self.args.paired_end_reads:
@@ -128,6 +154,16 @@ class VSetup:
             return 'single end read'
 
     def _create_output_dirs(self):
+        """Method that creates output directories based on root path passed
+           as a program argument. 
+
+           Output:
+                Subdirectories withing the base output path provided at run time. 
+           Returns:
+                out_dirs (dict): Dictionary of output directory paths. 
+           Raises: 
+                FileNotFoundError: Exception thrown if base output path cannot be located. 
+        """
         if self.args.output != os.getcwd():
             self.args.output = os.path.join(os.getcwd(), self.args.output)
         out_path = self.args.output
@@ -143,7 +179,7 @@ class VSetup:
         dir_list = [
                     'stats',
                     'logs',
-		            'mapped'
+		    'mapped'
                    ]
         for fdir in dir_list:
             out_dirs[fdir] = self._make_dir(out_path, fdir)
@@ -158,6 +194,12 @@ class VSetup:
         return out_dirs
 
     def _make_dir(self, out_path, fdir):
+        """Wrapper function to create a subdirectory within the base output folder.
+           Raises: 
+                FilesExistsError: Exception thrown if a given subdirectory already
+                                  exists within the base output path. Prevents the
+                                  overwritting of data from previous runs. 
+        """
         fpath = os.path.join(out_path, fdir)
         if not os.path.exists(fpath):
             os.makedirs(fpath)
@@ -165,15 +207,25 @@ class VSetup:
         else:
             raise FileExistsError('Directory: ' + fpath + ' already exists.\n'
                                   'Please specify an unused output directory.')
-    def _get_dependency(self, name, type):
-        if type == 'assembler':
+    def _get_dependency(self, name, cat):
+        """Method that returns the specific program call(s) based on the
+           dependencies specified at runtime. 
+
+           Arguments:
+                name(str): dependency name as specified at runtime. 
+                cat (str): Category to which the dependency belongs. 
+           Returns:
+                (list): List of program calls to be executed for the specified
+                        dependency.
+        """
+        if cat == 'assembler':
             if name == 'spades':
                 return ['spades.py']
             elif name == 'velvet':
                 return['velvelth', 'velvetg']
             elif name == 'megahit':
                 return ['megahit']
-        elif type == 'mapper':
+        elif cat  == 'mapper':
             if name == 'blastp':
                 return ['makeblastdb', 'blastp']
             elif name == 'lambda':
@@ -182,6 +234,14 @@ class VSetup:
                 return ['diamond']
 
     def check_dependencies(self):
+        """Wrapper function to itterate through each dependency
+           and verify its existence in the system path. 
+
+           Raises:
+                FileNotFoundError: Exception raised if shutil.which cannot find a particular 
+                                   dependency. 
+
+        """
         depend_list = ['ktImportText', 'getorf']
         if self.args.assembled_contigs is False:
             depend_list += self._get_dependency(self.args.assembler, 'assembler')
@@ -198,11 +258,25 @@ class VSetup:
         # TODO check java version for hitviz
 
 def copy_and_remove(src, dest):
+    """Wrapper function for moving the entire contents of a directory"""
     for f in glob(os.path.join(src,'*')):
         shutil.move(f, dest)
     shutil.rmtree(src)
 
 class Logger:
+    """Logger class to handle standardized output of logs for each module.
+       Attributes:
+          module (str): name of module which has initialized the logger. 
+          out_dir (str): Output direcotry containing log file. 
+          log_file(str): Full path to log file. 
+
+       Arguments: 
+            module (str): Name of the module creating a new logger. 
+            out_dir (str): Path to output directory. 
+       Output: 
+            Formatted log strings in log.txt file. 
+    """
+
     def __init__(self, module, out_dir):
         self.module = module
         self.out_dir = out_dir

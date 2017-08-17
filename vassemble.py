@@ -4,6 +4,7 @@ from glob import glob
 import vutils
 
 class VAssemble:
+
     def __init__(self, finput, paired_end_reads, threads):
         self.finput = finput
         self.paired_end_reads = paired_end_reads
@@ -64,9 +65,10 @@ class VAssemble:
             print('Running megahit...')
             p = subprocess.check_call(['megahit',
                                        '-t', self.threads,
-                                       '-o', temp_out
                                       ]
-				                      + formatted_input)
+				      + formatted_input
+                                      + ['-o', temp_out]
+                                     )
 
             vutils.copy_and_remove(temp_out, self.asm_dir)
             self.contigs = os.path.join(self.asm_dir, 'final.contigs.fa')
