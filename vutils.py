@@ -7,7 +7,9 @@ from glob import glob
 from datetime import datetime
 
 class VSetup:
-    """Class used to parse program arguments
+    """Class used to parse program arguments, check dependencies,  create output directoties, and 
+       and assist in managing run time parameters. 
+
        Attributes:
             argv_ (list): list of passed command line args 
             _parser (ArgParser): ArgParser object used to parse argv_
@@ -101,8 +103,8 @@ class VSetup:
         return parser
 
     def _check_parser(self):
-        """Method that checks based arguments for logic 
-           not implicitly handled by the parser.
+        """Method that checks passed arguments for logic 
+           not implicitly handled by the ArgumentParser.
            
            Raises:
                 ParserError: ArgumentParser error if args are incorrect. 
@@ -266,7 +268,7 @@ def copy_and_remove(src, dest):
 class Logger:
     """Logger class to handle standardized output of logs for each module.
        Attributes:
-          module (str): name of module which has initialized the logger. 
+          module (str): Name of module which has initialized the logger. 
           out_dir (str): Output direcotry containing log file. 
           log_file(str): Full path to log file. 
 
@@ -283,8 +285,20 @@ class Logger:
         self.log_file = os.path.join(out_dir, 'log.txt')
 
     def get_time(self):
+        """Function for generating formated time strings. 
+        Returns: 
+            (str): Formatted current time.
+        """
         return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     def log(self, method, msg):
+        """Method for writing a formated entry in the log file. 
+        Arguments:
+            method (str): Name of the method invoking a log call. 
+            msg (str): Message to be logged. 
+        Output: 
+            Formatted entry in the log.txt file found in the log subdir of the
+            base output path. 
+        """
         time = self.get_time()
         with open(self.log_file, 'a+') as output_handle:
             output_handle.write('[%s][%s][%s]\n' % (time, self.module, method))
