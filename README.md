@@ -87,3 +87,38 @@ Dependencies and selected utilities will be checked by the pipeline at the start
 -o OUTPUT, --output OUTPUT  
   * Base output directory path. All output will be located
     here. Must be relative to current working directory.  
+
+
+## Examples
+PhageRage can be used for the analysis of either paired end reads, single end reads, or assembled contigs. 
+
+The following provide sample runs for each case:
+
+**Paired-end reads:** 
+```virusland.py /path/to/read1.fa /path/to/read2.fa -pqa spades -m diamond -i /path/to/GBK_files -t 12 -o /my/output/dir ```  
+or 
+
+```virusland.py /path/to/read1.fa /path/to/read2.fa --paired_end_reads --quality_control --assembler spades --mapper diamond --index /path/to/GBK_files --threads --output /my/output/dir```  
+
+
+The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control timming with Sickle, assembly with Spades, and map reads with diamonds. 
+
+**Single-end reads:**
+
+```virusland.py /path/to/myread.fa -sa velvet -m blast -i /path/to/GBK_files -o /my/output/dir ```
+
+or
+
+```virusland.py /path/to/myread.fa --single_end_reads --assembler velvet --mapper blast --index /path/to/GBK_files ---output /my/output/dir``` 
+
+The above command will run the pipeline on single-end reads using a default of 1 thread, perform assembly with Velvet, and mapping with BLAST. 
+
+**Assembled contigs:**
+
+```virusland /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold .8 -o /my/output/dir ```
+
+or
+
+```virusland /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold .8 -o /my/output/dir ``` 
+
+The above command accepts a single contigs file and performs mapping using lambda with a bitscore threshold of 80%. 
