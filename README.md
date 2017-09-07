@@ -103,13 +103,13 @@ or
 
 The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control timming with Sickle, assembly with Spades, and map reads with diamonds. 
 
-**Single-end reads:**
+**Single-end reads:**  
 
 ```virusland.py /path/to/myread.fa -sa velvet -m blast -i /path/to/GBK_files -o /my/output/dir ```
 
 or
 
-```virusland.py /path/to/myread.fa --single_end_reads --assembler velvet --mapper blast --index /path/to/GBK_files ---output /my/output/dir``` 
+```virusland.py /path/to/myread.fa --single_reads --assembler velvet --mapper blast --index /path/to/GBK_files ---output /my/output/dir``` 
 
 The above command will run the pipeline on single-end reads using a default of 1 thread, perform assembly with Velvet, and mapping with BLAST. 
 
