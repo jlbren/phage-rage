@@ -16,7 +16,7 @@ PhageRage can also be quickly installed as a docker container with all dependenc
 4. [KronaTool](https://github.com/marbl/Krona/wiki/KronaTools)    
 5. [Emboss (getorf)](http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html)  
 6. [Sickle](https://github.com/ucdavis-bioinformatics/sickle) \*  
-   1. [Zlib](http://www.zlib.net/)  
+    * [Zlib](http://www.zlib.net/)  
 7. [SPAdes v3.10.1](http://bioinf.spbau.ru/content/spades-download) \**  
 8. [Velvet](https://github.com/dzerbino/velvet/tree/master) \**  
 9. [Diamond](https://github.com/bbuchfink/diamond) \**  
