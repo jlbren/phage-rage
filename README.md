@@ -50,30 +50,40 @@ Dependencies and selected utilities will be checked by the pipeline at the start
     contigs file(s).  
   
 **optional arguments:**  
-  -h, --help            
+-h, --help            
   * Show this help message and exit  
-  -s, --single_reads    
+
+-s, --single_reads    
   * Single reads flag. Requires specifying 1 input read file.  
-  -p, --paired_end_reads  
+
+-p, --paired_end_reads  
   * Paired-end reads flag. Requires specifying 2 input read files.  
-  -a {spades,velvet,megahit}, --assembler {spades,velvet,megahit}  
+
+-a {spades,velvet,megahit}, --assembler {spades,velvet,megahit}  
   * Selected assembly utility.  
-  -A, --assembled_contigs  
+
+-A, --assembled_contigs  
   * Assembled contigs flag. Start analysis from an
     existing assembly. Requires specifying 1 input contigs
     file.  
-  -q, --quality_control  
+
+-q, --quality_control  
   * Read quality control flag. Trim input read(s) with sickle.  
-  -m {blastp,lambda,diamond}, --mapper {blastp,lambda,diamond}  
+
+-m {blastp,lambda,diamond}, --mapper {blastp,lambda,diamond}  
   * Selected mapping utility.  
-  -i INDEX, --index INDEX  
+
+-i INDEX, --index INDEX  
   * Path to directory containing GBK files to be used when
     building mapper index. Files may either be within the
     given directory and/or one level of subdirectory.
-  -t THREADS, --threads THREADS  
+
+-t THREADS, --threads THREADS  
   * Number of threads.  
-  --threshold THRESHOLD  
+
+--threshold THRESHOLD  
   * Bitscore threshold for parsing mapper hits.  
-  -o OUTPUT, --output OUTPUT  
+
+-o OUTPUT, --output OUTPUT  
   * Base output directory path. All output will be located
     here. Must be relative to current working directory.  
