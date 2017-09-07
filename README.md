@@ -8,18 +8,31 @@ PhageRage can also be quickly installed as a docker container with all dependenc
   
 ## Dependencies  
 1. Operating System: Unix  
-2. GCC Compiler: http://gcc.gnu.org/  
+2. [GCC Compiler](http://gcc.gnu.org/)  
 3. Python - Version 3.4+ 
-4. KronaTools: https://github.com/marbl/Krona/wiki/KronaTools     
-5. Emboss (getorf): http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html  
-6. Sickle: https://github.com/ucdavis-bioinformatics/sickle *  
-   1. Zlib: http://www.zlib.net/  
-7. SPAdes 3.10.1: http://bioinf.spbau.ru/content/spades-download **  
-8. Velvet: https://github.com/dzerbino/velvet/tree/master **  
-9. Diamond: https://github.com/bbuchfink/diamond **  
-10. Lambda: https://seqan.github.io/lambda/ **  
-11. Megahit: https://github.com/voutcn/megahit **   
-12. BLAST+ Binaries: ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ **   
+  1. [Numpy](https://www.scipy.org/scipylib/download.html)
+  2. [Biopython](http://biopython.org/wiki/Download)
+  3. [Argparse](https://docs.python.org/3/library/argparse.html) 
+4. [KronaTool](https://github.com/marbl/Krona/wiki/KronaTools)    
+5. [Emboss (getorf)](http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html)  
+6. [Sickle](https://github.com/ucdavis-bioinformatics/sickle) \*  
+   1. [Zlib](http://www.zlib.net/)  
+7. [SPAdes v3.10.1](http://bioinf.spbau.ru/content/spades-download) \**  
+8. [Velvet](https://github.com/dzerbino/velvet/tree/master) \**  
+9. [Diamond](https://github.com/bbuchfink/diamond) \**  
+10. [Lambda](https://seqan.github.io/lambda/) \**  
+11. [Megahit](https://github.com/voutcn/megahit) \**   
+12. [BLAST+ Binaries](ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/) \**   
 
 \* Only required when passing the --quality_control (-q) flag at runtime.   
-** Only the specified assembly/alignment tool(s) selected at runtime are necesarry. 
+\** Only the specified assembly/alignment tool(s) selected at runtime are necesarry. 
+
+
+## Install/Setup
+Install all necessary dependencies and make sure they are detected in the system executable search path ([PATH enviornment variable](https://help.ubuntu.com/community/EnvironmentVariables#Persistent_environment_variables)). Note that only the assemblers/mappers desired for use at runtime need to be installed. 
+
+The required python modules can be installed quickly via pip: `pip3 install NumPy, biopython, argparse`
+
+Dependencies and selected utilities will be checked by the pipeline at the start of each run, and an error notifying which dependency could not be located will be produced if it is unable to be found.  
+
+## Usage: 
