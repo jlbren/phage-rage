@@ -12,7 +12,7 @@
 7. Velvet: https://github.com/dzerbino/velvet/tree/master **  
 8. Diamond: https://github.com/bbuchfink/diamond **  
 9. Lambda: https://seqan.github.io/lambda/ **  
-10. Megahit: https://github.com/voutcn/megahit ** 
-11 BLAST+ Binaries: ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ ** 
-*Only required when passing the --quality_control (-q) flag at runtime. 
-**Only the specific assemblers/alignment tool(s) selected at runtime are necesarry. 
+10. Megahit: https://github.com/voutcn/megahit **   
+11. BLAST+ Binaries: ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ **   
+\* Only required when passing the --quality_control (-q) flag at runtime. 
+** Only the specific assemblers/alignment tool(s) selected at runtime are necesarry. 
