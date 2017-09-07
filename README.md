@@ -9,10 +9,10 @@ PhageRage can also be quickly installed as a docker container with all dependenc
 ## Dependencies  
 1. Operating System: Unix  
 2. [GCC Compiler](http://gcc.gnu.org/)  
-3. Python - Version 3.4+ 
-  1. [Numpy](https://www.scipy.org/scipylib/download.html)
-  2. [Biopython](http://biopython.org/wiki/Download)
-  3. [Argparse](https://docs.python.org/3/library/argparse.html) 
+3. Python - Version 3.4+   
+    * [Numpy](https://www.scipy.org/scipylib/download.html)
+    * [Biopython](http://biopython.org/wiki/Download)
+    * ArgParse
 4. [KronaTool](https://github.com/marbl/Krona/wiki/KronaTools)    
 5. [Emboss (getorf)](http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html)  
 6. [Sickle](https://github.com/ucdavis-bioinformatics/sickle) \*  
