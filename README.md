@@ -46,7 +46,7 @@ Dependencies and selected utilities will be checked by the pipeline at the start
 
 **positional arguments:**  
   finput                
-  * Input file(s). Specify 2 PE, 1 SE or 1 assembled  
+  * Input file(s). Specify 2 paired-end reads, 1 sindle-end read or 1 assembled  
     contigs file(s).  
   
 **optional arguments:**  
