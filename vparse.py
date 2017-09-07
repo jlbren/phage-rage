@@ -6,6 +6,29 @@ import subprocess
 import vutils
 
 class Genome:
+    """Class for storing individual genome information and
+       basic statistics.
+    Arguments:
+        g_acc (str): Genome accession number.
+        species (str): Genome species name.
+        tax (str): Genome taxonomy, tab separated.
+    Attributes:
+        genome_acc (str): Genome accession number.
+        taxonomy (str): Genome taxonomy, tab separated.
+        species (str): Genome species name.
+        protein_list (list(str)): List of protein access numbers
+                                 belonging to the genome.
+        protein_hit_list (str(int)): List of hits to each protein. Index
+                                     corresponds to protein at the same
+                                     index in protein_list.
+        total_proteins_hit (int): Total number of proteins with at least
+                                  one hit.
+        total_hits_to_genome (int): Total number of hits across all
+                                    proteins.
+        total_percent_hit (float): Percentage of proteins with hits over
+                                   total number of proteins in the genome.
+    """
+
     def __init__(self, g_acc, species, tax):
         self.genome_acc = g_acc
         self.taxonomy = tax
@@ -17,10 +40,19 @@ class Genome:
         self.total_percent_hit = 0
 
     def set_proteins(self, plist):
+        """Method for initializing a genome's protein list.
+           Creates proein_hit_list of same size with initial vals of 0.
+        Arguments:
+            plist (list(str)): Genome's list of protein acc nums parsed from the GBK file.
+        """
         self.protein_list = plist
         self.protein_hit_list = [0] * len(plist)
 
     def get_number_of_proteins_with_hits(self):
+        """Method that returns the number of proteins with non-zero hits.
+        Returns:
+            total_hit (int): Total number of proteins in a genome with at least one hit.
+        """
         total_hit = 0
         for hit in self.protein_hit_list:
             if hit > 0:
@@ -28,14 +60,19 @@ class Genome:
         return total_hit
 
     def generate_stats(self):
+        """Public method for invoking calls to generate summary statistics."""
         self.total_proteins_hit = self.get_number_of_proteins_with_hits()
         self.total_hits_to_genome = self.get_number_of_hits_to_genome()
         percent_hit = self.get_percentage_of_proteins_hit()
         if percent_hit is None:
-            percent_hit == '0'
-        else:
-            self.total_percent_hit = percent_hit
+            percent_hit = '0'
+        self.total_percent_hit = percent_hit
+
     def get_percentage_of_proteins_hit(self):
+        """Method that calculates the total percentage of proteins in a genome with hits.
+        Returns:
+            (float): Percentage of number of proteins with hits / total num of proteins.
+        """
         if self.total_proteins_hit == 0:
             self.total_proteins_hit = self.get_number_of_proteins_with_hits()
         num_proteins = len(self.protein_list)
@@ -48,21 +85,41 @@ class Genome:
                 return '0'
 
     def get_number_of_hits_to_genome(self):
+        """Method to get the total sum of hits to the genome.
+        Returns:
+            (int): Sum of total hits to genome.
+        """
         return sum(self.protein_hit_list)
 
 class VParse:
+    """Class for managing parsing index and hit files,
+       Managing genome data structures, and writting output.
+    Attributes:
+        genomes (list(Genome)): Array of Genome objects representing all
+                                records in the index.
+        gbk_dir (str): Path to directory containing index GBK files.
+        gbk_files (list(str)): List of all GBK files in index dir
+                               or one level of subdir.
+        out_dir (str): Path to output direcatory.
+        index_file (str): Path to generated FAA file used to build mapper index.
+    """
     def __init__(self):
         self.genomes = []
         self.gbk_dir = None
         self.gbk_files = None
-        self.faa_index = None
         self.out_dir = None
         self.index_file = None
-
     def start_logger(self, log_dir):
+        """Boiler plate method for starting this class' logger."""
         self._logger = vutils.Logger('vparse', log_dir)
 
     def parse_index(self, gbk_dir, out_dir):
+        """Public method for initiaing the index parsing methods. 
+        Arguments: 
+            gbk_dir (str): Path to root directory containing
+                           GBK files to be parsed. 
+            out_dir (str): Path to write out parsed output. 
+        """
         print('Parsing GBK directory:', gbk_dir)
         self.gbk_dir = gbk_dir
         self.out_dir = out_dir
@@ -75,6 +132,12 @@ class VParse:
                         )
 
     def parse_gbk_files(self, gbk_file_list, out_dir):
+        """Method for parsing GBK input files to create the FAA index file and
+           populate genome data structure. 
+        Arguments:
+            gbk_file_list (list(str)): List of file paths to all GBK files. 
+            out_dir (str): Path to output directory. 
+        """
         index_file = os.path.join(out_dir, 'index.faa')
         output_handle = open(index_file, 'w')
         for f in gbk_file_list:
@@ -106,6 +169,16 @@ class VParse:
         return index_file
 
     def parse_gbk_dir(self, gbk_dir):
+        """Method to parse specified index directory and return a list of GBK files.
+           GBK files can either be in the root dir or within one level of sub directory. 
+        Arguments:
+            gbk_dir (str): Path to the provided index dir containing GBK files. 
+        Returns:
+            gbk_files (list(str)): List of all GBK files. 
+        Raises:
+            ValueError: Exception raised if no GBK files can be found
+                        in the provided directory. 
+        """
         gbk_files = []
         for gbk_file in glob(os.path.join(gbk_dir, '*.gbk')):
             gbk_files.append(gbk_file)
@@ -122,6 +195,11 @@ class VParse:
         return gbk_files
 
     def parse_hits_file(self, hits_file, threshold):
+        """Method for parsing hits file in order to update the count in the genome list. 
+        Arguments:
+            hits_file (str): Path to hit file produced by the mapper. 
+            threshold (float): Bitscore threshold for evaluating hit quality.
+        """
         print('Parsing hit file...')
         self._logger.log('parse_hits_file', 'Parsing hit file: %s'
                                             % hits_file
@@ -137,6 +215,13 @@ class VParse:
         return True
 
     def update_hit(self, sseqid):
+        """Method for incrementing the appropriate hit counter when mapped to a protein.
+        Arguments:
+            sseqid (str): ID string of the subject sequence in a mapped hit 
+                          (protein accession num)
+        Returns:
+            (bool): True if protein is found in genome index, false if not found. 
+        """
         fields = sseqid.split('|')
         pid = fields[3]
         for genome in self.genomes: # TODO ask about optimization
@@ -147,6 +232,7 @@ class VParse:
         return False
 
     def generate_statistics(self):
+        """Public method for initiating a call on each genomes generate_stats() method."""
         print('Generating genome statistics..')
         for genome in self.genomes:
             genome.generate_stats()
@@ -154,6 +240,10 @@ class VParse:
         return True
 
     def write_out_all_stats(self, stats_dir):
+        """Public method for calling each separate write method.
+        Arguments:
+            stats_dir (str): Directory to write all output files to.
+        """
         self._logger.log('write_out_all_stats', 'Writting out stats files.\n'
                                                 'Output directory: %s' % stats_dir
                         )
@@ -162,6 +252,12 @@ class VParse:
         self.write_out_for_krona(stats_dir)
 
     def write_out_for_krona(self, stats_dir):
+        """Method for producing output file to be read by Krona.
+        Arguments:
+             stats_dir (str): Directory output file is located. 
+        Outputs:
+            krona_stats.csv: Hits to Genome, Taxonomy, Species; tab separated. 
+        """
         krona_file = os.path.join(stats_dir, 'krona_stats.csv')
         print('Writing out for Krona to:', krona_file)
         with open(krona_file, 'w') as output_handle:
@@ -180,6 +276,12 @@ class VParse:
                               ])
 
     def write_out_for_hitviz(self, stats_dir):
+        """Method for proudcing output file to be read by hitviz. 
+        Arguments:
+             stats_dir (str): Directory output file is located.
+        Outputs: 
+            hitviz_stats.csv: Number of hits to each protein in each genome.
+        """
         hitviz_file = os.path.join(stats_dir, 'hitviz_stats.csv')
         print('Writing out for HitViz to:', hitviz_file)
         with open(hitviz_file, 'w') as output_handle:
@@ -199,6 +301,14 @@ class VParse:
                     output_handle.write('*\n')
 
     def write_out_summary_statistics(self, stats_dir):
+        """Method for proudcing summary statistic output files. 
+        Arguments:
+             stats_dir (str): Directory output file is located. 
+        Outputs: 
+            coverage.csv: Coverage information on each genome with 
+                          at least one hit. 
+            hits_by_protein.csv: Accession number of each protein with number of hits. 
+        """
         print('Writing out summary statistics...')
         coverage_file = os.path.join(stats_dir, 'coverage.csv')
         with open(coverage_file, 'w') as output_handle:
