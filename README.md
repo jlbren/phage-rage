@@ -22,7 +22,7 @@ PhageRage can also be quickly installed as a docker container with all dependenc
 9. [Diamond](https://github.com/bbuchfink/diamond) \**  
 10. [Lambda](https://seqan.github.io/lambda/) \**  
 11. [Megahit](https://github.com/voutcn/megahit) \**   
-12. [BLAST+ Binaries](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download)**   
+12. [BLAST+ Binaries](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download) **   
 
 \* Only required when passing the --quality_control (-q) flag at runtime.   
 \** Only the specified assembly/alignment tool(s) selected at runtime are necesarry. 
