@@ -1,4 +1,4 @@
-# phage-rage 1.0  
+# phage-rage v1.0  
 
 Advances in sequencing technology provide the opportunity to explore viral diversity in a variety of ecological niches. Analysis of complex viral samples presents unique bioinformatic challenges, punctuated by the paucity of available viral genomes relative to their richness in the environment. PhageRage has been developed for the comprehensive examination of viral metagenomic data. PhageRage is a UNIX-based solution for the comprehensive examination of viral metagenomic data from assembly through analysis. It was developed with agility in mind; tools, databases, and modules can easily be customized and controlled by the user without the need for extensive computational experience.
 
@@ -79,10 +79,10 @@ Dependencies and selected utilities will be checked by the pipeline at the start
     given directory and/or one level of subdirectory.
 
 -t THREADS, --threads THREADS  
-  * Number of threads.  
+  * Number of threads (Default=1).  
 
 --threshold THRESHOLD  
-  * Bitscore threshold for parsing mapper hits.  
+  * Bitscore threshold for parsing mapper hits (Default=80).  
 
 -o OUTPUT, --output OUTPUT  
   * Base output directory path. All output will be located
@@ -95,7 +95,8 @@ PhageRage can be used for the analysis of either paired end reads, single end re
 The following provide sample runs for each case:
 
 **Paired-end reads:** 
-```virusland.py /path/to/read1.fa /path/to/read2.fa -pqa spades -m diamond -i /path/to/GBK_files -t 12 -o /my/output/dir ```  
+```virusland.py /path/to/read1.fa /path/to/read2.fa -pqa spades -m diamond -i /path/to/GBK_files -t 12 -o /my/output/dir ``` 
+  
 or 
 
 ```virusland.py /path/to/read1.fa /path/to/read2.fa --paired_end_reads --quality_control --assembler spades --mapper diamond --index /path/to/GBK_files --threads --output /my/output/dir```  
@@ -119,6 +120,7 @@ The above command will run the pipeline on single-end reads using a default of 1
 
 or
 
-```virusland /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold .8 -o /my/output/dir ``` 
+```virusland /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold 60 -o /my/output/dir ``` 
 
-The above command accepts a single contigs file and performs mapping using lambda with a bitscore threshold of 80%. 
+The above command accepts a single contigs file and performs mapping using lambda with a bitscore threshold of 60.
+
