@@ -137,7 +137,7 @@ All output will be located in the following respective subdirectories within the
 **Stats**
 
 Subdirectory containing the final output and statistics produced by the pipeline.
- * coverage.csv: File providing stats on total percentage of each organism's genome was mapped to hits.
+ * coverage.csv: File providing stats on total percentage of each organism's genome that was mapped to hits.
  * hits_by_protein.csv: File providing counts of how many hits each individual protein received.
  * krona_stats.csv: File produced that can be turned into a Krona HTML graph by the ktImportText utility. 
  * krona_graph.html: Krona hierarchial data graph. Can be opened by any modern web browser. 
