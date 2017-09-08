@@ -166,7 +166,7 @@ Subdirectory containing the output of the selected assembly utility.
   
   * Directory containing pipeline log file which records user supplied parameters, runtime per module, and additional supplementary information. 
   
-  ## Authurs
+  ## Authors
   
   * Jonathon Brenner
   * Thomas Hatzopoulos
