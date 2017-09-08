@@ -35,6 +35,9 @@ The required python modules can be installed quickly via pip: `pip3 install NumP
 
 Dependencies and selected utilities will be checked by the pipeline at the start of each run, and an error notifying which dependency could not be located will be produced if it is unable to be found.  
 
+To install PhageRage simply clone this git project in the desired install location. Run the pipeline 
+by opening a terminal in the project directory and calling `python3 virusland.py ...`, or set up an alias/softlink as  desired. 
+
 
 ## Usage 
 **virusland [-h] [-s | -p] [-a {spades,velvet,megahit} | -A] [-q] -m  
@@ -86,7 +89,7 @@ Dependencies and selected utilities will be checked by the pipeline at the start
 
 -o OUTPUT, --output OUTPUT  
   * Base output directory path. All output will be located
-    here. Must be relative to current working directory.  
+    here. Defaults to current working directory.  
 
 
 ## Examples
@@ -120,7 +123,42 @@ The above command will run the pipeline on single-end reads using a default of 1
 
 or
 
-```virusland /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold 60 -o /my/output/dir ``` 
+```virusland /path/to/my_contigs.fa --assembled_contigs --mapper lambda --index /path/to/GBK_files --threshold 60 --output /my/output/dir ``` 
 
 The above command accepts a single contigs file and performs mapping using lambda with a bitscore threshold of 60.
+
+
+## Output
+
+All output will be located in the following respective subdirectories within the base output directory specified by the -o/--output flag. Note that if any of the created subdirectories already exist in the specified output location an error will be raised in order avoid over writting previous runs. 
+
+**Stats**
+
+Subdirectory containing the final output and statistics produced by the pipeline.
+ * coverage.csv: File providing stats on total percentage of each organism's genome was mapped to hits.
+ * hits_by_protein.csv: File providing counts of how many hits each individual protein received.
+ * krona_stats.csv: File produced that can be turned into a Krona HTML graph by the ktImportText utility. 
+ * krona_graph.html: Krona hierarchial data graph. Can be opened by any modern web browser. 
+**Trimmed**
+ 
+ Subdirectory containing trimmed produced by Sickle if the quality control flag is passed at runtime.  
+  * trimmed-<r1>.fastq .. : Trimmed read file(s) produced by Sickle. 
+  * singletons.fastq: Unpaired reads produced by Sickle when processing paired-end reads. 
+  
+  
+**Assembled**
+
+Subdirectory containing the output of the selected assembly utility.  
+ * contigs.fasta: Contigs file produced by the assembler.
+  
+**Mapped**
+  
+  Subdirectory containing mapper output and related files.  
+  * hits.csv: Hits file produced by selected mapper utility. 
+  * index.faa: FAA file produced by parsing the GBK files provided by the -i/--index flag at runtime used to build the mapper index. 
+  * predicted_orfs.faa: Proteins predicted from the provided or assembled contigs produced by getorf that are used for mapping against the index. 
+  
+  **Logs**
+  
+  * Directory containing pipeline log file which records user supplied parameters, runtime per module, and additional supplementary information. 
 
