@@ -146,7 +146,7 @@ Subdirectory containing the final output and statistics produced by the pipeline
 **Trimmed**
  
  Subdirectory containing trimmed produced by Sickle if the quality control flag is passed at runtime.  
-  * trimmed-<r1>.fastq .. : Trimmed read file(s) produced by Sickle. 
+  * trimmed-myread.fastq .. : Trimmed read file(s) produced by Sickle. 
   * singletons.fastq: Unpaired reads produced by Sickle when processing paired-end reads. 
   
   
