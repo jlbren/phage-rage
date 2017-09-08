@@ -93,11 +93,13 @@ by opening a terminal in the project directory and calling `python3 virusland.py
 
 
 ## Examples
+
 PhageRage can be used for the analysis of either paired end reads, single end reads, or assembled contigs. 
 
 The following provide sample runs for each case:
 
 **Paired-end reads:** 
+
 ```virusland.py /path/to/read1.fa /path/to/read2.fa -pqa spades -m diamond -i /path/to/GBK_files -t 12 -o /my/output/dir ``` 
   
 or 
@@ -139,6 +141,7 @@ Subdirectory containing the final output and statistics produced by the pipeline
  * hits_by_protein.csv: File providing counts of how many hits each individual protein received.
  * krona_stats.csv: File produced that can be turned into a Krona HTML graph by the ktImportText utility. 
  * krona_graph.html: Krona hierarchial data graph. Can be opened by any modern web browser. 
+ * hitviz_stats.csv: File produced for use with the [hitviz](<hitviz_repo>) visualization utility. 
  
 **Trimmed**
  
