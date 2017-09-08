@@ -139,6 +139,7 @@ Subdirectory containing the final output and statistics produced by the pipeline
  * hits_by_protein.csv: File providing counts of how many hits each individual protein received.
  * krona_stats.csv: File produced that can be turned into a Krona HTML graph by the ktImportText utility. 
  * krona_graph.html: Krona hierarchial data graph. Can be opened by any modern web browser. 
+ 
 **Trimmed**
  
  Subdirectory containing trimmed produced by Sickle if the quality control flag is passed at runtime.  
