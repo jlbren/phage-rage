@@ -13,7 +13,7 @@ PhageRage can also be quickly installed as a docker container with all dependenc
     * [Numpy](https://www.scipy.org/scipylib/download.html)
     * [Biopython](http://biopython.org/wiki/Download)
     * ArgParse
-4. [KronaTool](https://github.com/marbl/Krona/wiki/KronaTools)    
+4. [KronaTools](https://github.com/marbl/Krona/wiki/KronaTools)    
 5. [Emboss (getorf)](http://emboss.sourceforge.net/apps/cvs/emboss/apps/getorf.html)  
 6. [Sickle](https://github.com/ucdavis-bioinformatics/sickle) \*  
     * [Zlib](http://www.zlib.net/)  
