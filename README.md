@@ -25,11 +25,11 @@ PhageRage can also be quickly installed as a docker container with all dependenc
 12. [BLAST+ Binaries](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download) **   
 
 \* Only required when passing the --quality_control (-q) flag at runtime.   
-\** Only the specified assembly/alignment tool(s) selected at runtime are necesarry. 
+\** Only the specified assembly/homoloy detection tool(s) selected at runtime are necesarry. 
 
 
 ## Install/Setup
-Install all necessary dependencies and make sure they are detected in the system executable search path ([PATH enviornment variable](https://help.ubuntu.com/community/EnvironmentVariables#Persistent_environment_variables)). Note that only the assemblers/mappers desired for use at runtime need to be installed. 
+Install all necessary dependencies and make sure they are detected in the system executable search path ([PATH enviornment variable](https://help.ubuntu.com/community/EnvironmentVariables#Persistent_environment_variables)). Note that only the assembly/homology detection toold desired for use at runtime need to be installed. 
 
 The required python modules can be installed quickly via pip: `pip3 install NumPy, biopython, argparse`
 
@@ -49,7 +49,7 @@ by opening a terminal in the project directory and calling `python3 virusland.py
 
 **positional arguments:**  
   finput                
-  * Input file(s). Specify 2 paired-end reads, 1 sindle-end read or 1 assembled  
+  * Input file(s). Specify 2 paired-end reads, 1 single-end read or 1 assembled  
     contigs file(s).  
   
 **optional arguments:**  
@@ -67,18 +67,18 @@ by opening a terminal in the project directory and calling `python3 virusland.py
 
 -A, --assembled_contigs  
   * Assembled contigs flag. Start analysis from an
-    existing assembly. Requires specifying 1 input contigs
+    existing assembly. Requires specifying 1 input contig
     file.  
 
 -q, --quality_control  
   * Read quality control flag. Trim input read(s) with sickle.  
 
 -m {blastp,lambda,diamond}, --mapper {blastp,lambda,diamond}  
-  * Selected mapping utility.  
+  * Selected homology detection tool.  
 
 -i INDEX, --index INDEX  
-  * Path to directory containing GBK files to be used when
-    building mapper index. Files may either be within the
+  * User supplied path to directory containing GBK files to be used when
+    building the index required for the given homology. Files may either be within the
     given directory and/or one level of subdirectory.
 
 -t THREADS, --threads THREADS  
@@ -107,7 +107,7 @@ or
 ```virusland.py /path/to/read1.fa /path/to/read2.fa --paired_end_reads --quality_control --assembler spades --mapper diamond --index /path/to/GBK_files --threads --output /my/output/dir```  
 
 
-The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control timming with Sickle, assembly with Spades, and map reads with diamonds. 
+The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control triming with Sickle, assembly with Spades, and homology detection reads with Diamond. 
 
 **Single-end reads:**  
 
@@ -117,7 +117,7 @@ or
 
 ```virusland.py /path/to/myread.fa --single_reads --assembler velvet --mapper blast --index /path/to/GBK_files ---output /my/output/dir``` 
 
-The above command will run the pipeline on single-end reads using a default of 1 thread, perform assembly with Velvet, and mapping with BLAST. 
+The above command will run the pipeline on single-end reads using a default of 1 thread, perform assembly with Velvet, and homolgy detection with blastp. 
 
 **Assembled contigs:**
 
@@ -127,12 +127,12 @@ or
 
 ```virusland /path/to/my_contigs.fa --assembled_contigs --mapper lambda --index /path/to/GBK_files --threshold 60 --output /my/output/dir ``` 
 
-The above command accepts a single contigs file and performs mapping using lambda with a bitscore threshold of 60.
+The above command accepts a single contigs file and performs homology detection using Lambda with a bitscore threshold of 60.
 
 
 ## Output
 
-All output will be located in the following respective subdirectories within the base output directory specified by the -o/--output flag. Note that if any of the created subdirectories already exist in the specified output location an error will be raised in order avoid over writting previous runs. 
+All output will be located in the following respective subdirectories within the base output directory specified by the -o/--output flag. Note that if any of the created subdirectories already exist in the specified output location an error will be raised in order avoid overwriting previous runs. 
 
 **Stats**
 
@@ -152,15 +152,15 @@ Subdirectory containing the final output and statistics produced by the pipeline
   
 **Assembled**
 
-Subdirectory containing the output of the selected assembly utility.  
+Subdirectory containing the output of the selected assember.  
  * contigs.fasta: Contigs file produced by the assembler.
   
 **Mapped**
   
-  Subdirectory containing mapper output and related files.  
-  * hits.csv: Hits file produced by selected mapper utility. 
-  * index.faa: FAA file produced by parsing the GBK files provided by the -i/--index flag at runtime used to build the mapper index. 
-  * predicted_orfs.faa: Proteins predicted from the provided or assembled contigs produced by getorf that are used for mapping against the index. 
+  Subdirectory containing output from the selected homology detection tool and related files.  
+  * hits.csv: Hits file produced by selected homolgy detection tool 
+  * index.faa: FAA file produced by parsing the GBK files provided by the -i/--index flag at runtime used to build the index for the selected homolgy tool. 
+  * predicted_orfs.faa: Proteins predicted from the provided or assembled contigs produced by getorf that are used for querying against the index. 
   
   **Logs**
   
@@ -172,4 +172,6 @@ Subdirectory containing the output of the selected assembly utility.
   * Thomas Hatzopoulos
   * Zach Romer 
   * Catherine Putonti 
+  
+  ### Contact: putonti.lab@gmail.com.
 
