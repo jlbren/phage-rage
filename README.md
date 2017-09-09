@@ -107,7 +107,7 @@ or
 ```virusland.py /path/to/read1.fa /path/to/read2.fa --paired_end_reads --quality_control --assembler spades --mapper diamond --index /path/to/GBK_files --threads --output /my/output/dir```  
 
 
-The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control triming with Sickle, assembly with Spades, and homology detection reads with Diamond. 
+The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control triming with Sickle, assembly with Spades, and homology detection with Diamond. 
 
 **Single-end reads:**  
 
