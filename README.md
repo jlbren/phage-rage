@@ -71,7 +71,7 @@ by opening a terminal in the project directory and calling `python3 phage-rage.p
     file.  
 
 -q, --quality_control  
-  * Read quality control flag. Trim input read(s) with sickle.  
+  * Read quality control flag. Trim input read(s) with Sickle.  
 
 -m {blastp,lambda,diamond}, --mapper {blastp,lambda,diamond}  
   * Selected homology detection tool.  
