@@ -25,22 +25,22 @@ PhageRage can also be quickly installed as a docker container with all dependenc
 12. [BLAST+ Binaries](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download) **   
 
 \* Only required when passing the --quality_control (-q) flag at runtime.   
-\** Only the specified assembly/homoloy detection tool(s) selected at runtime are necesarry. 
+\** Only the specified assembly/homology detection tool(s) selected at runtime are necessary. 
 
 
 ## Install/Setup
-Install all necessary dependencies and make sure they are detected in the system executable search path ([PATH enviornment variable](https://help.ubuntu.com/community/EnvironmentVariables#Persistent_environment_variables)). Note that only the assembly/homology detection toold desired for use at runtime need to be installed. 
+Install all necessary dependencies and make sure they are detected in the system executable search path ([PATH environment variable](https://help.ubuntu.com/community/EnvironmentVariables#Persistent_environment_variables)). Note that only the assembly/homology detection tool desired for use at runtime need to be installed. 
 
 The required python modules can be installed quickly via pip: `pip3 install NumPy, biopython, argparse`
 
 Dependencies and selected utilities will be checked by the pipeline at the start of each run, and an error notifying which dependency could not be located will be produced if it is unable to be found.  
 
 To install PhageRage simply clone this git project in the desired install location. Run the pipeline 
-by opening a terminal in the project directory and calling `python3 virusland.py ...`, or set up an alias/softlink as  desired. 
+by opening a terminal in the project directory and calling `python3 phage-rage.py ...`, or set up an alias/softlink as  desired. 
 
 
 ## Usage 
-**virusland [-h] [-s | -p] [-a {spades,velvet,megahit} | -A] [-q] -m  
+**phage-rage [-h] [-s | -p] [-a {spades,velvet,megahit} | -A] [-q] -m  
                  {blastp,lambda,diamond} -i INDEX [-t THREADS]  
                  [--threshold THRESHOLD] [-o OUTPUT]  
                  finput [finput ...]**  
@@ -49,7 +49,7 @@ by opening a terminal in the project directory and calling `python3 virusland.py
 
 **positional arguments:**  
   finput                
-  * Input file(s). Specify 2 paired-end reads, 1 single-end read or 1 assembled  
+  * Input file(s). Specify 2 paired-end reads, 1 single-end read, or 1 assembled  
     contigs file(s).  
   
 **optional arguments:**  
@@ -57,7 +57,7 @@ by opening a terminal in the project directory and calling `python3 virusland.py
   * Show this help message and exit  
 
 -s, --single_reads    
-  * Single reads flag. Requires specifying 1 input read file.  
+  * Single-end reads flag. Requires specifying 1 input read file.  
 
 -p, --paired_end_reads  
   * Paired-end reads flag. Requires specifying 2 input read files.  
@@ -77,70 +77,70 @@ by opening a terminal in the project directory and calling `python3 virusland.py
   * Selected homology detection tool.  
 
 -i INDEX, --index INDEX  
-  * User supplied path to directory containing GBK files to be used when
-    building the index required for the given homology. Files may either be within the
-    given directory and/or one level of subdirectory.
+  * User supplied path to directory containing GBK files to be used by
+    the homology detection tool. Files may either be within the
+    specified directory and/or one level of subdirectory.
 
 -t THREADS, --threads THREADS  
-  * Number of threads (Default=1).  
+  * Number of threads. (Default=1) 
 
 --threshold THRESHOLD  
-  * Bitscore threshold for parsing mapper hits (Default=80).  
+  * Bitscore threshold for parsing mapper hits. (Default=80) 
 
 -o OUTPUT, --output OUTPUT  
   * Base output directory path. All output will be located
-    here. Defaults to current working directory.  
+    here. (Default=current working directory)  
 
 
 ## Examples
 
-PhageRage can be used for the analysis of either paired end reads, single end reads, or assembled contigs. 
+PhageRage can be used for the analysis of either paired end reads, single-end reads, or assembled contigs. 
 
 The following provide sample runs for each case:
 
 **Paired-end reads:** 
 
-```virusland.py /path/to/read1.fa /path/to/read2.fa -pqa spades -m diamond -i /path/to/GBK_files -t 12 -o /my/output/dir ``` 
+```phage-rage.py /path/to/read1.fa /path/to/read2.fa -pqa spades -m diamond -i /path/to/GBK_files -t 12 -o /my/output/dir ``` 
   
 or 
 
-```virusland.py /path/to/read1.fa /path/to/read2.fa --paired_end_reads --quality_control --assembler spades --mapper diamond --index /path/to/GBK_files --threads --output /my/output/dir```  
+```phage-rage.py /path/to/read1.fa /path/to/read2.fa --paired_end_reads --quality_control --assembler spades --mapper diamond --index /path/to/GBK_files --threads --output /my/output/dir```  
 
 
-The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control triming with Sickle, assembly with Spades, and homology detection with Diamond. 
+The above command will run the pipeline on 2 paired end reads using 12 threads, perform quality control trimming with Sickle, assembly with Spades, and homology detection with Diamond. 
 
 **Single-end reads:**  
 
-```virusland.py /path/to/myread.fa -sa velvet -m blast -i /path/to/GBK_files -o /my/output/dir ```
+```phage-rage.py /path/to/myread.fa -sa velvet -m blast -i /path/to/GBK_files -o /my/output/dir ```
 
 or
 
-```virusland.py /path/to/myread.fa --single_reads --assembler velvet --mapper blast --index /path/to/GBK_files ---output /my/output/dir``` 
+```phage-rage.py /path/to/myread.fa --single_reads --assembler velvet --mapper blast --index /path/to/GBK_files ---output /my/output/dir``` 
 
-The above command will run the pipeline on single-end reads using a default of 1 thread, perform assembly with Velvet, and homolgy detection with blastp. 
+The above command will run the pipeline on single-end reads using a default of 1 thread, perform assembly with Velvet, and homology detection with blastp. 
 
 **Assembled contigs:**
 
-```virusland /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold .8 -o /my/output/dir ```
+```phage-rage.py /path/to/my_contigs.fa -Am lambda -i /path/to/GBK_files --threshold .8 -o /my/output/dir ```
 
 or
 
-```virusland /path/to/my_contigs.fa --assembled_contigs --mapper lambda --index /path/to/GBK_files --threshold 60 --output /my/output/dir ``` 
+```phage-rage.py /path/to/my_contigs.fa --assembled_contigs --mapper lambda --index /path/to/GBK_files --threshold 60 --output /my/output/dir ``` 
 
-The above command accepts a single contigs file and performs homology detection using Lambda with a bitscore threshold of 60.
+The above command accepts a contigs file and performs homology detection using Lambda with a bitscore threshold of 60.
 
 
 ## Output
 
-All output will be located in the following respective subdirectories within the base output directory specified by the -o/--output flag. Note that if any of the created subdirectories already exist in the specified output location an error will be raised in order avoid overwriting previous runs. 
+All output will be located in the following respective subdirectories within the base output directory specified by the -o/--output flag. Note: if any of the created subdirectories already exist in the specified output location, an error will be raised in order avoid overwriting previous runs.
 
 **Stats**
 
 Subdirectory containing the final output and statistics produced by the pipeline.
- * coverage.csv: File providing stats on total percentage of each organism's genome that was mapped to hits.
- * hits_by_protein.csv: File providing counts of how many hits each individual protein received.
+ * coverage.csv: File providing stats on total percentage of each sequence in the index set identified as homologous to contigs.
+ * hits_by_protein.csv: File providing counts of hits for each individual coding sequence in each sequence in the index set.
  * krona_stats.csv: File produced that can be turned into a Krona HTML graph by the ktImportText utility. 
- * krona_graph.html: Krona hierarchial data graph. Can be opened by any modern web browser. 
+ * krona_graph.html: Krona hierarchical data graph. Can be opened by any modern web browser. 
  * hitviz_stats.csv: File produced for use with the [hitviz](<hitviz_repo>) visualization utility. 
  
 **Trimmed**
@@ -152,19 +152,19 @@ Subdirectory containing the final output and statistics produced by the pipeline
   
 **Assembled**
 
-Subdirectory containing the output of the selected assember.  
+Subdirectory containing the output of the selected assembler.  
  * contigs.fasta: Contigs file produced by the assembler.
   
 **Mapped**
   
   Subdirectory containing output from the selected homology detection tool and related files.  
-  * hits.csv: Hits file produced by selected homolgy detection tool 
-  * index.faa: FAA file produced by parsing the GBK files provided by the -i/--index flag at runtime used to build the index for the selected homolgy tool. 
-  * predicted_orfs.faa: Proteins predicted from the provided or assembled contigs produced by getorf that are used for querying against the index. 
+  * hits.csv: Hits file produced by selected homology detection tool. 
+  * index.faa: FAA file produced at runtime by parsing the GBK files provided by the -i/--index flag. 
+  * predicted_orfs.faa: Proteins predicted from the provided or assembled contigs produced by getorf. These sequences are used for querying against the index. 
   
   **Logs**
   
-  * Directory containing pipeline log file which records user supplied parameters, runtime per module, and additional supplementary information. 
+  * Directory containing PhageRage log file which records user supplied parameters, runtime per module, and additional supplementary information. 
   
   ## Authors
   
