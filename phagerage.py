@@ -10,7 +10,7 @@ vconf.check_dependencies()
 
 # Log start message
 vlog = vutils.Logger('phagerage', vconf.out_dirs['logs'])
-start_msg = ('Starting virusland pipeline.\nConfiguration:\n'
+start_msg = ('Starting phagerage pipeline.\nConfiguration:\n'
              + '\tInput: ' + ' '.join(vconf.args.finput) + '\n'
              + '\tInput type: ' + vconf.input_type + '\n'
              + '\tAssembler: ' + str(vconf.args.assembler) + '\n'
@@ -44,7 +44,7 @@ vparser.start_logger(vconf.out_dirs['logs'])
 vparser.parse_index(vconf.args.index, vconf.out_dirs['mapped'])
 
 # Mapping
-# TODO clean up these functins, everything shouldnt be in constructor if possible 
+# TODO clean up these functions, everything shouldnt be in constructor if possible 
 vmapper = vmap.VMap(contigs, 
                     vconf.args.mapper, 
                     vconf.out_dirs['mapped'], 
@@ -59,5 +59,5 @@ vparser.generate_statistics()
 vparser.write_out_all_stats(vconf.out_dirs['stats'])
 
 # Goodbye
-vlog.log('main', 'Virusland pipeline finished.\n'
+vlog.log('main', 'PhageRage Pipeline Finished.\n'
                  'Thank you for using this program. Goodbye!')

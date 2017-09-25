@@ -33,8 +33,8 @@ class VSetup:
            Returns:
                 parser (ArgumentParser): initialized ArgumentParser object 
         """
-        parser = argparse.ArgumentParser(description="VLand 2: PHAGE RAGE",
-                                         prog="virusland")
+        parser = argparse.ArgumentParser(description="PHAGE RAGE",
+                                         prog="phagerage")
         # Input files: 2 PE, 1 SE, or 1 pre-assembled contigs
         parser.add_argument('finput', nargs='+',
                             help='Input file(s). Specify 2 PE, 1 SE or '

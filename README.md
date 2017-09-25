@@ -40,7 +40,7 @@ by opening a terminal in the project directory and calling `python3 phage-rage.p
 
 
 ## Usage 
-**phage-rage [-h] [-s | -p] [-a {spades,velvet,megahit} | -A] [-q] -m  
+**phagerage [-h] [-s | -p] [-a {spades,velvet,megahit} | -A] [-q] -m  
                  {blastp,lambda,diamond} -i INDEX [-t THREADS]  
                  [--threshold THRESHOLD] [-o OUTPUT]  
                  finput [finput ...]**  
