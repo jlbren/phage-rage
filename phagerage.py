@@ -9,7 +9,7 @@ vconf = vutils.VSetup(sys.argv[1:])
 vconf.check_dependencies()
 
 # Log start message
-vlog = vutils.Logger('virusland', vconf.out_dirs['logs'])
+vlog = vutils.Logger('phagerage', vconf.out_dirs['logs'])
 start_msg = ('Starting virusland pipeline.\nConfiguration:\n'
              + '\tInput: ' + ' '.join(vconf.args.finput) + '\n'
              + '\tInput type: ' + vconf.input_type + '\n'
