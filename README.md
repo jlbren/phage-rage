@@ -4,7 +4,7 @@ Advances in sequencing technology provide the opportunity to explore viral diver
 
 PhageRage is a locally run utility. The following README describes the process for manual installation and usage.  
 
-PhageRage can also be quickly installed as a docker container with all dependencies included. See [here](https://github.com/thatzopoulos/PhageRage-docker) for instructions on how to build the image manually, or pull a prebuilt container from DockerHub. 
+PhageRage can also be quickly installed as a docker container with all dependencies included. See instructions below on how to build the image manually, or pull a prebuilt container from DockerHub [here](https://github.com/thatzopoulos/PhageRage-docker). 
   
 ## Dependencies  
 1. Operating System: Unix  
